@@ -72,7 +72,7 @@ public class DescribeSelectedElementCommand extends DefaultModuleCommandHandler 
        
         //Chama o resource para tocar o ficheiro de audio
         //Nao da para criar ficheiro através de um URI num ficheiro jar, mas dá para passar o input stream directamente e tocar
-        InputStream inputStream = getClass().getResourceAsStream("/org/modelio/soundUML/sounds/arrow.wav");
+        InputStream inputStream = getClass().getResourceAsStream("/org/modelio/soundUML/sounds/duolingo.wav");
         SimpleAudioPlayer player = new SimpleAudioPlayer();
         player.play(inputStream);
 

@@ -3,7 +3,6 @@ package org.modelio.soundUML.impl;
 import java.io.BufferedInputStream;
 //Java program to play an Audio
 //file using Clip Object
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
