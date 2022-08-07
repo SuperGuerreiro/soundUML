@@ -103,8 +103,6 @@ public class DescribeSelectedElementCommand extends DefaultModuleCommandHandler 
         
 
     }
-    
-   
 
  }
 
