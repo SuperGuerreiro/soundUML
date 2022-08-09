@@ -15,7 +15,10 @@ public class UmlClassDiagramReader {
 	public void readObject(MObject mObj) {
 		
 		if(mObj instanceof Attribute) {
-			MessageDialog.openInformation(null, "Info", ((Attribute) mObj).getType().toString());
+			
+			String test = ((Attribute) mObj).getType().toString();
+			TextToSpeech.speak(test);
+			MessageDialog.openInformation(null, "Info", test);
 		}
 		
 		

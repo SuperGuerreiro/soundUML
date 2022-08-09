@@ -3,6 +3,7 @@
     <ClassPath>
         <PathEntry path="lib/${project.artifactId}-${project.version}.jar"/>
         <PathEntry path="lib/commons-lang3-3.1.jar"/>
+        <PathEntry path="lib/freetts-1.2.2.jar"/>
     </ClassPath>
     <Profiles>
         <Profile uid="271b1c47-6669-4fab-ba45-a1784fad1ed2" id="TestArchetypeProfile">
