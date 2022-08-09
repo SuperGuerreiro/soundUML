@@ -83,8 +83,6 @@ public class DescribeSelectedElementCommand extends DefaultModuleCommandHandler 
 		String teste = JOptionPane.showInputDialog(null, "Introduz texto aqui:");
 		MessageDialog.openInformation(null, "Teste string", teste);
 		
-		TextToSpeech.speak("ola ola ola");
-
 		if (teste.equalsIgnoreCase("boas")) {
 			MessageDialog.openInformation(null, "Entrei aqui", modelelt.getName());
 		} else {
@@ -105,5 +103,5 @@ public class DescribeSelectedElementCommand extends DefaultModuleCommandHandler 
 
 	}
 
-
+	
 }
