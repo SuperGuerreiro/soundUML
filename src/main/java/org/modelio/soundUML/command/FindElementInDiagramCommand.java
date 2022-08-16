@@ -93,6 +93,7 @@ public class FindElementInDiagramCommand extends DefaultModuleCommandHandler {
 
 						UmlClassDiagramReader uml = new UmlClassDiagramReader(c);
 						uml.readObject(c);
+						logService.info("aaa");
 						// TODO: Ver se consigo retornar info extra relativamente a este element
 						// Provavelmente a solução será fazer uma especie de "parser" onde vou ter de
 						// ver se MObject é instanceof e passar os atributos disso
@@ -114,5 +115,9 @@ public class FindElementInDiagramCommand extends DefaultModuleCommandHandler {
 		// module.getModuleContext().getModelioServices().getDiagramService().getDiagramHandle(d).getDiagramGraphics(element)
 
 	}
+	
 
 }
+
+
+
