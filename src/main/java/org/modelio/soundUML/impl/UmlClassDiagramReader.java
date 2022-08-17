@@ -2,8 +2,11 @@ package org.modelio.soundUML.impl;
 
 
 import org.eclipse.jface.dialogs.MessageDialog;
-
+import org.eclipse.swt.widgets.Display;
+import org.modelio.metamodel.uml.statik.Class;
+import org.modelio.metamodel.uml.statik.AssociationEnd;
 import org.modelio.metamodel.uml.statik.Attribute;
+import org.modelio.metamodel.uml.statik.Generalization;
 import org.modelio.vcore.smkernel.mapi.MObject;
 
 
@@ -20,6 +23,11 @@ public class UmlClassDiagramReader {
 	}
 
 	public void readObject(MObject mObj) {
+		
+		if (mObj instanceof Class) {
+			//Não sei se este vai ser necessário
+		}
+
 
 		if (mObj instanceof Attribute) {
 			String test = ((Attribute) mObj).getType().toString();
@@ -32,6 +40,20 @@ public class UmlClassDiagramReader {
 			int result = dialog.open();
 				
 		}
+		
+		if(mObj instanceof AssociationEnd) {
+			//De onde liga
+			//Para onde liga
+			//Cardinalidades
+			//Roles
+		}
+		
+		if(mObj instanceof Generalization) {
+			
+		}
+		
+		
+
 
 	}
 
@@ -62,6 +84,7 @@ public class UmlClassDiagramReader {
 		System.out.println(result);
 	}
 */
+
 }
 
 

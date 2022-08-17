@@ -32,6 +32,10 @@
                 <Scope metaclass="ModelTree"/>
                 <Handler class="org.modelio.soundUML.command.FindElementInDiagramCommand"/>
             </Command>
+            <Command id="ReadDiagramCommand" label="%ReadDiagramCommandLabel" tooltip="%ReadDiagramCommandTooltip" image="res/icons/HelloWorldCommand_16.png" group="" modify-model="false" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="org.modelio.soundUML.command.ReadDiagramCommand"/>
+            </Command>
             <Command id="DescribeSelectedElementCommand" label="%DescribeSelectedElementCommandLabel" tooltip="%DescribeSelectedElementCommandTooltip" image="res/icons/HelloWorldCommand_16.png" group="" modify-model="false" group-image="">
                 <Scope metaclass="ModelTree"/>
                 <Handler class="org.modelio.soundUML.command.DescribeSelectedElementCommand"/>
@@ -67,6 +71,7 @@
             <CommandRef refid="HelloWorldCommand"/>
             <CommandRef refid="FindElementInDiagramCommand"/>
             <CommandRef refid="DescribeSelectedElementCommand"/>
+            <CommandRef refid="ReadDiagramCommand"/>
             <CommandRef refid="CreateElementCommandExample"/>
             <CommandRef refid="CreateDiagramCommandExample"/>
         </ContextualMenu>
