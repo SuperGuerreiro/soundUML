@@ -69,23 +69,24 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 		for (AbstractDiagram d : elements) {
 			// Vai buscar os elementos representados neste diagrama
 			EList<Element> diagramElements = d.getRepresented();
-			// Iterar esses elementos deste diagrama e encontra aquele com o nome igual ao
-			// que passámos como input
+			// Iterar os elementos deste diagrama
 			for (Element e : diagramElements) {
 
 				if (e.getCompositionOwner() != null) {
-					MessageDialog.openInformation(null, "Info", "Owner: " + e.getCompositionOwner());
+					//MessageDialog.openInformation(null, "Info", "Owner: " + e.getCompositionOwner());
+					UmlClassDiagramReader uml1 = new UmlClassDiagramReader(e);
+					uml1.readObject(e);
 				}
 
+
 				// Iterar os child objects deste nó (cuidado que pode causar ciclos)
-				// CompositionGetter.getAllChildren((Collection<? extends MObject>) e); -> pode
-				// evitar ciclos
+				// CompositionGetter.getAllChildren((Collection<? extends MObject>) e); -> pode evitar ciclos
 				List<? extends MObject> compChldrn = e.getCompositionChildren();
 				for (MObject c : compChldrn) {
-					MessageDialog.openInformation(null, "Info", c.getName() + " " + c.getMClass());
-
+					//MessageDialog.openInformation(null, "Info", c.getName() + " " + c.getMClass());
+					
 					UmlClassDiagramReader uml = new UmlClassDiagramReader(c);
-					// uml.readObject(c);
+					uml.readObject(c);
 					// TODO: Ver se consigo retornar info extra relativamente a este element
 					// Provavelmente a solução será fazer uma especie de "parser" onde vou ter de
 					// ver se MObject é instanceof e passar os atributos disso

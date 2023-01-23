@@ -35,6 +35,7 @@ public class MessageDialogExtended extends MessageDialog {
 	 * many times as they want
 	 * 
 	 * Known bug: you can press the button several times in a row (TODO)
+	 * TODO: Fazer um button para acabar logo a leitura
 	 */
 	@Override
 	protected void buttonPressed(int buttonId) {
@@ -54,11 +55,11 @@ public class MessageDialogExtended extends MessageDialog {
 			super.getButton(1).setEnabled(true);
 			super.getButton(2).setEnabled(true);
 			super.getButton(3).setEnabled(true);
+			super.getButton(4).setEnabled(true);
 			break;
 		case 3:
 			super.buttonPressed(buttonId);
 			break;
-
 		}
 		
 	}

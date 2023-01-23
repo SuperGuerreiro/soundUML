@@ -1,13 +1,14 @@
 package org.modelio.soundUML.impl;
 
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.modelio.metamodel.uml.statik.Class;
-import org.modelio.metamodel.uml.statik.AssociationEnd;
-import org.modelio.metamodel.uml.statik.Attribute;
-import org.modelio.metamodel.uml.statik.Generalization;
+import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.vcore.smkernel.mapi.MObject;
+import org.modelio.metamodel.uml.statik.*;
 
 
 /*
@@ -24,44 +25,109 @@ public class UmlClassDiagramReader {
 
 	public void readObject(MObject mObj) {
 		
+	
+		//Class
 		if (mObj instanceof Class) {
-			//Não sei se este vai ser necessário
+			//Nome da classe
+			String className = mObj.getName();
+			
+			//TODO: Ver se a class é abstract
+			
+			String userMessage = "Class with name " + className;
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+			
+			// Set the file path and text to be read
+			dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
+			int result = dialog.open();
+			
+			
+			//Ler os attributes desta classe -> Faz sentido ser aqui
+			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
+			for (MObject c : compChldrn) {
+				readObject(c);
+			}
 		}
 
-
 		if (mObj instanceof Attribute) {
-			String test = ((Attribute) mObj).getType().toString();
+			//A que classe pertence
+			String attributeClass = mObj.getClass().getName();
+			//O nome do atributo
+			String attributeName = mObj.getName();
+			//O tipo do atributo
+			String attributeType = ((Attribute) mObj).getType().toString();
+			
+			//String test = ((Attribute) mObj).getType().toString();
 			// TextToSpeech.speak(test);
+			
+			MessageDialog.openInformation(null, "Info", "Entrei aqui");
 
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, test, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue" }, 0);
+			
+			String userMessage = "Attribute " + attributeName + " from class " + attributeClass + " with the type " + attributeType;
+
+
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/duolingo.wav", test); 
-			int result = dialog.open();
+			dialog.setStrings("/org/modelio/soundUML/sounds/02attribute.wav", userMessage); 
+			//int result = dialog.open();
 				
 		}
 		
+		//Operation/method
+	
+		//Association
 		if(mObj instanceof AssociationEnd) {
-			//De onde liga
+			//De onde liga 
 			//Para onde liga
+			((AssociationEnd) mObj).getTarget();
 			//Cardinalidades
 			//Roles
 		}
 		
+		//Generalization/Inheritance
 		if(mObj instanceof Generalization) {
+			//superType é o pai
+			((Generalization) mObj).getSuperType();
+			
+			//subType
+			((Generalization) mObj).getSubType();
 			
 		}
+		
+		//Inheritance
+		
+		//Realization/Implementation
+		
+		//Dependency
+		
+		//Aggregation
+		
+		//Composition
+		
+		//Class Association
+		if(mObj instanceof ClassAssociation) {
+			//Get Associated Class
+			((ClassAssociation) mObj).getClassPart();
+			
+		}
+		
+		//Package
+		if(mObj instanceof Package) {
+
+		}
+
+		
+
 		
 		
 
 
 	}
 
-	
-/* Useful for debugging in eclipse
-	/**
-	 * Show an information dialog box.
-	 
+/* 
+    //Useful for debugging in eclipse
+	//Show an information dialog box.
 	public static void showInformation(final String title, final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
@@ -76,15 +142,15 @@ public class UmlClassDiagramReader {
 
 		MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, "My message TEST A", MessageDialog.INFORMATION,
 				new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue" }, 0);
-		dialog.setStrings("/org/modelio/soundUML/sounds/duolingo.wav", "aaaa"); // Set the file path and text to be read
+		dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", "aaaa"); // Set the file path and text to be read
 		int result = dialog.open();
 		System.out.println("aaaa");
 
 
 		System.out.println(result);
 	}
-*/
 
+*/
 }
 
 

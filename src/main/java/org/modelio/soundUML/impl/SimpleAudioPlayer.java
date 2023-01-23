@@ -47,7 +47,7 @@ public class SimpleAudioPlayer implements LineListener {
 			audioClip.start();
 
 			while (!playCompleted) {
-				// wait for the playback completes
+				// wait for the playback to complete
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {
