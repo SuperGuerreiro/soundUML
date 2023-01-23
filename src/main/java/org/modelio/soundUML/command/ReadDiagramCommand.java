@@ -79,6 +79,8 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 				}
 
 
+				/*Já não sei se isto é necessário, porque estamos a iterar os filhos dentro da class UmlClassDiagramReader 
+				 * pelo sim pelo não, vou deixar comentado
 				// Iterar os child objects deste nó (cuidado que pode causar ciclos)
 				// CompositionGetter.getAllChildren((Collection<? extends MObject>) e); -> pode evitar ciclos
 				List<? extends MObject> compChldrn = e.getCompositionChildren();
@@ -90,7 +92,8 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 					// TODO: Ver se consigo retornar info extra relativamente a este element
 					// Provavelmente a solução será fazer uma especie de "parser" onde vou ter de
 					// ver se MObject é instanceof e passar os atributos disso
-				}
+				} 
+				*/
 
 			}
 

@@ -24,8 +24,6 @@ public class UmlClassDiagramReader {
 	}
 
 	public void readObject(MObject mObj) {
-		
-	
 		//Class
 		if (mObj instanceof Class) {
 			//Nome da classe
@@ -39,10 +37,11 @@ public class UmlClassDiagramReader {
 			
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
-			int result = dialog.open();
-			
-			
-			//Ler os attributes desta classe -> Faz sentido ser aqui
+			int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
+		
+				
+			//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
+			// Iterar os child objects deste nó (cuidado que pode causar ciclos)
 			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
 			for (MObject c : compChldrn) {
 				readObject(c);
@@ -51,27 +50,20 @@ public class UmlClassDiagramReader {
 
 		if (mObj instanceof Attribute) {
 			//A que classe pertence
-			String attributeClass = mObj.getClass().getName();
+			String attributeClass = mObj.getCompositionOwner().getName();
 			//O nome do atributo
 			String attributeName = mObj.getName();
 			//O tipo do atributo
-			String attributeType = ((Attribute) mObj).getType().toString();
-			
-			//String test = ((Attribute) mObj).getType().toString();
-			// TextToSpeech.speak(test);
-			
-			MessageDialog.openInformation(null, "Info", "Entrei aqui");
-
-			
-			String userMessage = "Attribute " + attributeName + " from class " + attributeClass + " with the type " + attributeType;
-
+			String unparsedAttributeType = ((Attribute) mObj).getType().toString();
+			String parsedAttributeType = parseAttType(unparsedAttributeType);
+		
+			String userMessage = "Attribute " + attributeName + " from class " + attributeClass + " of the type " + parsedAttributeType;
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/02attribute.wav", userMessage); 
-			//int result = dialog.open();
-				
+			int result = dialog.open();
 		}
 		
 		//Operation/method
@@ -124,7 +116,11 @@ public class UmlClassDiagramReader {
 
 
 	}
-
+	
+	private String parseAttType(String unparsedType) {		
+		return unparsedType.substring(1, unparsedType.indexOf("'", 1));
+		
+	}
 /* 
     //Useful for debugging in eclipse
 	//Show an information dialog box.

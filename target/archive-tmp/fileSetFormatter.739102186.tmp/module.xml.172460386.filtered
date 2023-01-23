@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Module id="SoundUML" class="org.modelio.soundUML.impl.SoundUMLModule" binaryversion="4.1.00" version="1.0.00" schema-level="2" uid="6ee5182e-7d13-44b7-b4dd-481ad9b40885">
+    <ClassPath>
+        <PathEntry path="lib/soundUML-1.0.00.jar"/>
+        <PathEntry path="lib/commons-lang3-3.1.jar"/>
+        <PathEntry path="lib/freetts-1.2.2.jar"/>
+    </ClassPath>
+    <Profiles>
+        <Profile uid="271b1c47-6669-4fab-ba45-a1784fad1ed2" id="TestArchetypeProfile">
+            <Stereotype name="stereotype1" metaclass="Class" is-hidden="false" label="Stereotype 1" uid="481670e0-9cdd-4c23-a299-1d9dee5b9e3b">
+                <Icon path="res/icons/Stereotype1_16.png"/>
+                <Image path="res/icons/Stereotype1_48.png"/>
+            </Stereotype>
+            <Stereotype name="stereotype2" metaclass="ClassDiagram" is-hidden="false" label="Stereotype 2" uid="39bff603-56ba-46f5-ab01-4b12437bd7ce">
+                <Icon path="res/icons/Stereotype2_16.png"/>
+                <Image path="res/icons/Stereotype2_16.png"/>
+            </Stereotype>
+            <MetaclassReference uid="e8edc525-0948-4205-959f-1ddd83874d21" metaclass="ModelElement">
+                <TagTypes>
+                    <TagType name="TagName" uid="422177a2-8d2c-47bb-b749-b8a19f76a70c" label="Name" parameter-card="1" is-hidden="false" is-signed="false"/>
+                </TagTypes>
+            </MetaclassReference>
+        </Profile>
+    </Profiles>
+    <Gui>
+        <Commands>
+            <Command id="HelloWorldCommand" label="%HelloWorldCommandLabel" tooltip="%HelloWorldCommandTooltip" image="res/icons/HelloWorldCommand_16.png" group="" modify-model="false" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="org.modelio.soundUML.command.HelloWorldCommand"/>
+            </Command>
+            <Command id="FindElementInDiagramCommand" label="%FindElementInDiagramCommandLabel" tooltip="%FindElementInDiagramCommandTooltip" image="res/icons/HelloWorldCommand_16.png" group="" modify-model="false" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="org.modelio.soundUML.command.FindElementInDiagramCommand"/>
+            </Command>
+            <Command id="ReadDiagramCommand" label="%ReadDiagramCommandLabel" tooltip="%ReadDiagramCommandTooltip" image="res/icons/HelloWorldCommand_16.png" group="" modify-model="false" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="org.modelio.soundUML.command.ReadDiagramCommand"/>
+            </Command>
+            <Command id="DescribeSelectedElementCommand" label="%DescribeSelectedElementCommandLabel" tooltip="%DescribeSelectedElementCommandTooltip" image="res/icons/HelloWorldCommand_16.png" group="" modify-model="false" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="org.modelio.soundUML.command.DescribeSelectedElementCommand"/>
+            </Command>
+            <Command id="CreateElementCommandExample" label="%CreateElementCommandExampleLabel" tooltip="%CreateElementCommandExampleTooltip" image="res/icons/Stereotype1_16.png" group="" modify-model="true" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="ElementCreate">
+                    <HParameter name="name" value="%CreateElementCommandExampleName"/>
+                    <HParameter name="metaclass" value="Class"/>
+                    <HParameter name="stereotype" value="stereotype1"/>
+                </Handler>
+            </Command>
+            <Command id="CreateDiagramCommandExample" label="%CreateDiagramCommandExampleLabel" tooltip="%CreateDiagramCommandExampleTooltip" image="res/icons/Stereotype2_16.png" group="" modify-model="true" group-image="">
+                <Scope metaclass="ModelTree"/>
+                <Handler class="DiagramCreate">
+                    <HParameter name="name" value="%CreateDiagramCommandExampleName"/>
+                    <HParameter name="metaclass" value="ClassDiagram"/>
+                    <HParameter name="stereotype" value="stereotype2"/>
+                </Handler>
+            </Command>
+        </Commands>
+        <Tools>
+            <Tool id="CreateElementDiagramCommandExample" label="%CreateElementDiagramCommandExampleLabel" tooltip="%CreateElementDiagramCommandExampleTooltip" image="res/icons/Stereotype1_16.png">
+                <Scope-source metaclass="ModelTree"/>
+                <Handler class="Box">
+                    <HParameter name="name" value="%CreateElementDiagramCommandExampleName"/>
+                    <HParameter name="metaclass" value="Class"/>
+                    <HParameter name="stereotype" value="stereotype1"/>
+                </Handler>
+            </Tool>
+        </Tools>
+        <ContextualMenu>
+            <CommandRef refid="HelloWorldCommand"/>
+            <CommandRef refid="FindElementInDiagramCommand"/>
+            <CommandRef refid="DescribeSelectedElementCommand"/>
+            <CommandRef refid="ReadDiagramCommand"/>
+            <CommandRef refid="CreateElementCommandExample"/>
+            <CommandRef refid="CreateDiagramCommandExample"/>
+        </ContextualMenu>
+        <Diagrams>
+            <DiagramType base-diagram="ClassDiagram" stereotype="stereotype2">
+                <Palette keepBasePalette="false">
+                    <ToolRef refid="CreateElementDiagramCommandExample" group="Customization"/>
+                </Palette>
+                <Handler class="StandardCustomizer"/>
+            </DiagramType>
+        </Diagrams>
+        <Views/>
+    </Gui>
+    <Dependencies/>
+</Module>

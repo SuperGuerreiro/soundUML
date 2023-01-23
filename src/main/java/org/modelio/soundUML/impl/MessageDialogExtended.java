@@ -55,7 +55,6 @@ public class MessageDialogExtended extends MessageDialog {
 			super.getButton(1).setEnabled(true);
 			super.getButton(2).setEnabled(true);
 			super.getButton(3).setEnabled(true);
-			super.getButton(4).setEnabled(true);
 			break;
 		case 3:
 			super.buttonPressed(buttonId);
