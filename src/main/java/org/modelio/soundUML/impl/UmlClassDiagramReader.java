@@ -11,6 +11,7 @@ import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.vcore.smkernel.mapi.MObject;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Element;
+import org.modelio.metamodel.uml.infrastructure.ModelElement;
 import org.modelio.metamodel.uml.statik.*;
 
 
@@ -167,6 +168,33 @@ public class UmlClassDiagramReader {
 		
 		//07 Dependency
 		if(mObj instanceof Dependency) {
+			
+			//Elemento que depende (provavelmente é sempre uma classe?)
+			String dependentElement = mObj.getCompositionOwner().getName();
+
+			
+			//Depende deste elemento
+			ModelElement element = ((Dependency) mObj).getDependsOn();
+			String dependsOn = element.getName();
+			
+			MessageDialog.openInformation(null, "Info", element.getName() + " " + element.getMClass());
+			
+			String userMessage = null;
+			
+			if(element instanceof Class) {
+				userMessage = dependentElement + " depends on class " + dependsOn;
+			}
+			
+			if(element instanceof Interface) {
+				userMessage = dependentElement + " depends on interface " + dependsOn;
+			}
+			
+
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Dependency", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+			// Set the file path and text to be read
+			dialog.setStrings("/org/modelio/soundUML/sounds/07dependency.wav", userMessage); 
+			int result = dialog.open();
 
 		}
 		
