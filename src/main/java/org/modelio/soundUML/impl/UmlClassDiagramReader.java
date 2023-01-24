@@ -40,7 +40,8 @@ public class UmlClassDiagramReader {
 			dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
 			int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
 		
-				
+			
+			
 			//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
 			// Iterar os child objects deste nó (cuidado que pode causar ciclos)
 			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
@@ -86,7 +87,7 @@ public class UmlClassDiagramReader {
 			String returnType = ((Operation) mObj).getReturn().getType().toString();
 			String parsedAttributeType = parseType(returnType);
 
-			
+			//Provavelmente vai ter de ser um FOR consoante o nº de parametros que tivermos
 			String userMessage = "Operation " + operationName + " from class " + operationClass + " with parameters " + " and returns the type " + parsedAttributeType;
 
 			
@@ -98,16 +99,33 @@ public class UmlClassDiagramReader {
 			
 		}
 	
+		
 		//04 Association
 		if(mObj instanceof AssociationEnd) {
 			//De onde liga 
+			String associationFrom = mObj.getCompositionOwner().getName();
+
 			//Para onde liga
-			((AssociationEnd) mObj).getTarget();
+			
+			//String associationTo = ((AssociationEnd) mObj).getTarget().getName();
+					
 			//Cardinalidades
 			//Roles
+			//Association Type
+			
+			String userMessage = "Relationship from class " + associationFrom + " to class " ;
+			
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+			// Set the file path and text to be read
+			dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
+			int result = dialog.open();
+			
+			
 		}
 		
-		//Generalization/Inheritance
+		
+		//05 Generalization/Inheritance
 		if(mObj instanceof Generalization) {
 			//superType é o pai
 			((Generalization) mObj).getSuperType();
@@ -117,26 +135,25 @@ public class UmlClassDiagramReader {
 			
 		}
 		
-		//Inheritance
 		
-		//Realization/Implementation
+		//06 Realization/Implementation
 		
-		//Dependency
+		//07 Dependency
 		
-		//Aggregation
+		//08 Aggregation
 		
-		//Composition
+		//09 Composition
 		
-		//Class Association
+		//10 Class Association
 		if(mObj instanceof ClassAssociation) {
 			//Get Associated Class
 			((ClassAssociation) mObj).getClassPart();
 			
 		}
 		
-		//Package
+		//11 Package
 		if(mObj instanceof Package) {
-
+			//MessageDialog.openInformation(null, "Info", "Entrei aqui");
 		}
 
 		
