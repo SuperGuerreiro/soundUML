@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.vcore.smkernel.mapi.MObject;
+import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.statik.*;
 
 
@@ -33,7 +34,7 @@ public class UmlClassDiagramReader {
 			//TODO: Ver se a class é abstract
 			
 			String userMessage = "Class with name " + className;
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			
 			// Set the file path and text to be read
@@ -64,7 +65,7 @@ public class UmlClassDiagramReader {
 			
 			String userMessage = "Attribute " + attributeName + " from class " + attributeClass + " of the type " + parsedAttributeType;
 
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Attribute", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/02attribute.wav", userMessage); 
@@ -91,7 +92,7 @@ public class UmlClassDiagramReader {
 			String userMessage = "Operation " + operationName + " from class " + operationClass + " with parameters " + " and returns the type " + parsedAttributeType;
 
 			
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Operation/Method", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/03operation.wav", userMessage); 
@@ -100,22 +101,34 @@ public class UmlClassDiagramReader {
 		}
 	
 		
-		//04 Association
+		//04 Association 
+		//Agregation e composition também?
 		if(mObj instanceof AssociationEnd) {
 			//De onde liga 
 			String associationFrom = mObj.getCompositionOwner().getName();
 
 			//Para onde liga
+			//String associationFrom = mObj.getCompositionOwner().getName();
+
+			//TODO: Resolver esta parte (não sei como)
 			
 			//String associationTo = ((AssociationEnd) mObj).getTarget().getName();
 					
-			//Cardinalidades
-			//Roles
+			//Roles (Ex. ser dean)
+			
 			//Association Type
+			EList<LinkEnd> links = ((AssociationEnd) mObj).getOccurence();
+			
+			//Cardinalidades
+			for (LinkEnd link : links) { //Não está a entrar aqui
+				String test = link.getMultiplicityMax();
+				String test2 = link.getMultiplicityMin();
+				MessageDialog.openInformation(null, "Info", "Multiplicity Max: " + test + " Multiplicity Min: " + test2);
+			}
 			
 			String userMessage = "Relationship from class " + associationFrom + " to class " ;
 			
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, userMessage, MessageDialog.INFORMATION,
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Relationship", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
@@ -127,12 +140,22 @@ public class UmlClassDiagramReader {
 		
 		//05 Generalization/Inheritance
 		if(mObj instanceof Generalization) {
+			
 			//superType é o pai
-			((Generalization) mObj).getSuperType();
+			String parentClassUnparsed = ((Generalization) mObj).getSuperType().toString();
+			String parentClassParsed = parseType(parentClassUnparsed);
 			
 			//subType
-			((Generalization) mObj).getSubType();
+			String childClassUnparsed = ((Generalization) mObj).getSubType().toString();
+			String childClassParsed = parseType(childClassUnparsed);
 			
+			String userMessage = childClassParsed + " is a " + parentClassParsed;
+
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+			// Set the file path and text to be read
+			dialog.setStrings("/org/modelio/soundUML/sounds/05inheritance.wav", userMessage); 
+			int result = dialog.open();
 		}
 		
 		

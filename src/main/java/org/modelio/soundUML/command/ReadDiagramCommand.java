@@ -80,6 +80,7 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 				   A restante iteração é feita dentro do método readObject(e)
 				 */
 				if (e.getCompositionOwner().getCompositionOwner() != null && e.getCompositionOwner().getCompositionOwner() instanceof Project ) {
+					//MessageDialog.openInformation(null, "Info", e.getName() + " " + e.getMClass());
 					UmlClassDiagramReader uml = new UmlClassDiagramReader(e);
 					uml.readObject(e);
 				}
