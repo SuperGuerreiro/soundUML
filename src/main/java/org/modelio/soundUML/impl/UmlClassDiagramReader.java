@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import org.modelio.metamodel.uml.statik.Class;
 import org.modelio.metamodel.uml.statik.Package;
 import org.modelio.vcore.smkernel.mapi.MObject;
+import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.statik.*;
 
@@ -160,8 +161,14 @@ public class UmlClassDiagramReader {
 		
 		
 		//06 Realization/Implementation
+		if(mObj instanceof InterfaceRealization) {
+
+		}
 		
 		//07 Dependency
+		if(mObj instanceof Dependency) {
+
+		}
 		
 		//08 Aggregation
 		
