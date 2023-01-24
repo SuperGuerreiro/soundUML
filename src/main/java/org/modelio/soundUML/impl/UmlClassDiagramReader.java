@@ -112,6 +112,8 @@ public class UmlClassDiagramReader {
 			//Para onde liga
 			//String associationFrom = mObj.getCompositionOwner().getName();
 
+			MessageDialog.openInformation(null, "Info", mObj.getName() + " " + mObj.getMClass());
+
 			//TODO: Resolver esta parte (não sei como)
 			
 			//String associationTo = ((AssociationEnd) mObj).getTarget().getName();
@@ -172,13 +174,10 @@ public class UmlClassDiagramReader {
 			//Elemento que depende (provavelmente é sempre uma classe?)
 			String dependentElement = mObj.getCompositionOwner().getName();
 
-			
 			//Depende deste elemento
 			ModelElement element = ((Dependency) mObj).getDependsOn();
 			String dependsOn = element.getName();
-			
-			MessageDialog.openInformation(null, "Info", element.getName() + " " + element.getMClass());
-			
+						
 			String userMessage = null;
 			
 			if(element instanceof Class) {
@@ -189,7 +188,6 @@ public class UmlClassDiagramReader {
 				userMessage = dependentElement + " depends on interface " + dependsOn;
 			}
 			
-
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Dependency", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			// Set the file path and text to be read
