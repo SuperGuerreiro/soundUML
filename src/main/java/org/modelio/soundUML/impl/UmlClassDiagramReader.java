@@ -105,20 +105,22 @@ public class UmlClassDiagramReader {
 		}
 	
 		
-		//04 Association 
-		//Agregation e composition também?
-		
+		//04 Association, aggregation e composition
+		//According to what we concluded in the diagrammatic reading experiment, we are only reading the "outgoing" relationships of UML classes,
+		//Instead of repeating the same relationships
 		if(mObj instanceof AssociationEnd) {
 			String userMessage = null;
 			
 			//De onde liga 
 			String associationFrom = mObj.getCompositionOwner().getName();
-			
-			//EList<PropertyTable> properties = ((AssociationEnd) mObj).getProperties();
-			int aggregationValue = ((AssociationEnd) mObj).getAggregation().getValue();
+			//Value that allows me to know what type of relationship (association, aggregation or composition) this end of the arrow has
+			int relationshipValue = ((AssociationEnd) mObj).getAggregation().getValue();
 			
 			AssociationEnd oppositeEnd = ((AssociationEnd) mObj).getOpposite();
+			//Value for the opposite end of the arrow
 			int oppositeEndValue = oppositeEnd.getAggregation().getValue();
+			
+
 			
 			//Cardinalidades
 			String multiplicityMinFrom = ((AssociationEnd) mObj).getMultiplicityMin();
@@ -132,8 +134,8 @@ public class UmlClassDiagramReader {
 
 			
 			
-			//É association
-			if(aggregationValue == 0 && oppositeEndValue == 0) {
+			//Association
+			if(relationshipValue == 0 && oppositeEndValue == 0) {
 				
 				//Ver se é navegável só me faz falta quando já sei que estamos a lidar com association
 				boolean isNavigable = ((AssociationEnd) mObj).isNavigable(); 
@@ -143,6 +145,7 @@ public class UmlClassDiagramReader {
 				//Esta relationship só aparece uma vez no diagrama (do lado da associationFrom)
 				if(isNavigable) {
 					//Obter o target para onde vamos
+					//In this case, we have to get the owner this way. If not, the program crashes
 					String associationTo = ((AssociationEnd) mObj).getTarget().getName();
 					
 					//TODO: Cardinalidades e Roles
@@ -152,8 +155,9 @@ public class UmlClassDiagramReader {
 					
 				} else {
 					//se não é navegável, é só associação normal, sem pontas
-					
+					//Class that "owns" the other side of the arrow
 					String associationTo = oppositeEnd.getOwner().getName();
+					
 					userMessage = "Association between class " + associationFrom + " and class " + associationTo;
 					
 					//TODO: Cardinalidades e Roles
@@ -161,7 +165,7 @@ public class UmlClassDiagramReader {
 				
 				}
 				
-				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Relationship", null, userMessage, MessageDialog.INFORMATION,
+				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Association", null, userMessage, MessageDialog.INFORMATION,
 						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 				// Set the file path and text to be read
 				dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
@@ -169,44 +173,48 @@ public class UmlClassDiagramReader {
 				
 			}
 
+			//Aggregation
+			if(relationshipValue == 0 && oppositeEndValue == 1) {
+				//MessageDialog.openInformation(null, "Info", "É aggregation: " );
 				
-			if(aggregationValue == 1) // É Aggregation
-				MessageDialog.openInformation(null, "Info", "É aggregation: " + aggregationValue );
+				//Class that "owns" the other side of the arrow
+				String associationTo = oppositeEnd.getOwner().getName();
 				
-			if(aggregationValue == 2) // É composition
-				MessageDialog.openInformation(null, "Info", "É composition: " + aggregationValue );
-			
-			MessageDialog.openInformation(null, "Info", "opposite value: " + oppositeEndValue );
+				userMessage = "Aggregation, where class " + associationFrom + " is part of class " + associationTo;
 
-			
+				
+				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
+						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+				// Set the file path and text to be read
+				dialog.setStrings("/org/modelio/soundUML/sounds/08aggregation.wav", userMessage); 
+				int result = dialog.open();
 
-			
-			//Para onde liga
-			//String associationFrom = mObj.getCompositionOwner().getName();
-
-			//MessageDialog.openInformation(null, "Info", mObj.getName() + " " + mObj.getMClass());
-
-			//TODO: Resolver esta parte (não sei como)
-			
-			//String associationTo = ((AssociationEnd) mObj).getTarget().getName();
-					
-			//Roles (Ex. ser dean)
-			
-			//Association Type
-			EList<LinkEnd> links = ((AssociationEnd) mObj).getOccurence();
-			
-			//Cardinalidades
-			for (LinkEnd link : links) { //Não está a entrar aqui
-				String test = link.getMultiplicityMax();
-				String test2 = link.getMultiplicityMin();
-				MessageDialog.openInformation(null, "Info", "Multiplicity Max: " + test + " Multiplicity Min: " + test2);
+				
 			}
 			
 			
+			//Composition
+			if(relationshipValue == 0 && oppositeEndValue == 2) {
+				MessageDialog.openInformation(null, "Info", "É composition: " );
+				
+				//Class that "owns" the other side of the arrow
+				String associationTo = oppositeEnd.getOwner().getName();
+				
+				userMessage = "Composition, where " +  multiplicityMinFrom + " to " + multiplicityMaxFrom + " class " + 
+						associationTo  + " is composed by " +  multiplicityMinOpposite + " to " + multiplicityMaxOpposite + " class " + associationFrom;
+				
+				
+				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
+						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+				// Set the file path and text to be read
+				dialog.setStrings("/org/modelio/soundUML/sounds/09composition.wav", userMessage); 
+				int result = dialog.open();
+				
+			}
+
 			
 			
-			
-			
+		
 			
 			/*Poderá ser preciso para as class associations, mas ver depois
 			//Ler se tem uma class association ou nao
@@ -307,12 +315,6 @@ public class UmlClassDiagramReader {
 
 		}
 		
-		//08 Aggregation
-		
-		//09 Composition
-		
-		
-
 		
 		//11 Package
 		if(mObj instanceof Package) {
