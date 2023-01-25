@@ -111,7 +111,7 @@ public class UmlClassDiagramReader {
 		if(mObj instanceof AssociationEnd) {
 			String userMessage = null;
 			
-			//De onde liga 
+			//Class from where the association is connecting 
 			String associationFrom = mObj.getCompositionOwner().getName();
 			//Value that allows me to know what type of relationship (association, aggregation or composition) this end of the arrow has
 			int relationshipValue = ((AssociationEnd) mObj).getAggregation().getValue();
@@ -120,23 +120,15 @@ public class UmlClassDiagramReader {
 			//Value for the opposite end of the arrow
 			int oppositeEndValue = oppositeEnd.getAggregation().getValue();
 			
-
-			
 			//Multiplicities
 			String multiplicityMinFrom = ((AssociationEnd) mObj).getMultiplicityMin();
 			String multiplicityMaxFrom = ((AssociationEnd) mObj).getMultiplicityMax();
-			
 			String multiplicityMinOpposite = oppositeEnd.getMultiplicityMin();
 			String multiplicityMaxOpposite = oppositeEnd.getMultiplicityMax();
-			
 			
 			//Parsed strings with multiplicity, ready to be read
 			String multiplicityFrom = parseMultiplicity(multiplicityMinFrom, multiplicityMaxFrom);
 			String multiplicityOpposite = parseMultiplicity(multiplicityMinOpposite, multiplicityMaxOpposite);
-			
-			MessageDialog.openInformation(null, "Info", "Cardinalidades from: " + multiplicityFrom + "teste");
-			MessageDialog.openInformation(null, "Info", "Cardinalidades to: " + multiplicityOpposite);
-
 			
 			//Association
 			if(relationshipValue == 0 && oppositeEndValue == 0) {
@@ -144,27 +136,36 @@ public class UmlClassDiagramReader {
 				//Ver se é navegável só me faz falta quando já sei que estamos a lidar com association
 				boolean isNavigable = ((AssociationEnd) mObj).isNavigable(); 
 				//MessageDialog.openInformation(null, "Info", "É association: " + aggregationValue + " é navegável?: " + isNavigable);
-
-				//Penso que se isNavigable for true, temos sempre uma classe Target 
-				//Esta relationship só aparece uma vez no diagrama (do lado da associationFrom)
+				
+				/* Penso que se isNavigable for true, temos sempre uma classe Target 
+				 * Este tipo de relationship só aparece uma vez no diagrama (do lado da associationFrom)
+				 * ao contrário das outras que aparecem em ambos os associationEnd
+				*/
 				if(isNavigable) {
 					//Obter o target para onde vamos
 					//In this case, we have to get the owner this way. If not, the program crashes
 					String associationTo = ((AssociationEnd) mObj).getTarget().getName();
-					
-					//TODO: Cardinalidades e Roles
-					
-					userMessage = "Association from class " + associationFrom + " to class " + associationTo;
-					
+										
+					//Role -> it is the name of the associationEnd
+					String role = oppositeEnd.getName();
+					if(!role.isEmpty()) {
+						userMessage = "Association, where " + multiplicityOpposite + " class " +  associationFrom + ", with the role " 
+								+ role + ", accesses " + multiplicityFrom + " class " + associationTo;
+						
+					} else {
+						//Não tem role
+						userMessage = "Association, where " + multiplicityOpposite + " class " +  associationFrom + " accesses " 
+								+ multiplicityFrom + " class " + associationTo;
+					}
 					
 				} else {
 					//se não é navegável, é só associação normal, sem pontas
 					//Class that "owns" the other side of the arrow
 					String associationTo = oppositeEnd.getOwner().getName();
 					
-					userMessage = "Association between class " + associationFrom + " and class " + associationTo;
+					userMessage = "Association between " + multiplicityOpposite + " class " + associationFrom 
+							+ " and " + multiplicityFrom + " class " + associationTo;
 					
-					//TODO: Cardinalidades e Roles
 
 				
 				}
@@ -354,9 +355,9 @@ public class UmlClassDiagramReader {
 		
 		// a to * --> a to many
 		if(max.equals("*")) {
-			return (min + " or more ");
+			return (min + " or more");
 		}
-		
+				
 		//a to b
 		return min + " to " + max;
 
