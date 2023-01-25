@@ -139,7 +139,7 @@ public class UmlClassDiagramReader {
 		}
 	
 		
-		//04 Association, aggregation e composition
+		//04 Association, 08 aggregation e 09 composition
 		//According to what we concluded in the diagrammatic reading experiment, we are only reading the "outgoing" relationships of UML classes,
 		//Instead of repeating the same relationships
 		if(mObj instanceof AssociationEnd) {
@@ -313,13 +313,26 @@ public class UmlClassDiagramReader {
 		
 		
 		//06 Realization/Implementation
+		//Only implements an interface
 		if(mObj instanceof InterfaceRealization) {
+			String realizationFrom = mObj.getCompositionOwner().getName();
 
+			String interfaceName = ((InterfaceRealization) mObj).getImplemented().getName();
+			
+			String userMessage = "Class " + realizationFrom + " implements the interface " + interfaceName;
+			
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Realization/Implementation", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+			// Set the file path and text to be read
+			dialog.setStrings("/org/modelio/soundUML/sounds/06realization.wav", userMessage); 
+			int result = dialog.open();
+				
 		}
 		
 		//07 Dependency
 		if(mObj instanceof Dependency) {
-			
+			String userMessage = null;
+
 			//Elemento que depende (provavelmente é sempre uma classe?)
 			String dependentElement = mObj.getCompositionOwner().getName();
 
@@ -327,14 +340,13 @@ public class UmlClassDiagramReader {
 			ModelElement element = ((Dependency) mObj).getDependsOn();
 			String dependsOn = element.getName();
 						
-			String userMessage = null;
 			
 			if(element instanceof Class) {
-				userMessage = dependentElement + " depends on class " + dependsOn;
+				userMessage = "Class " + dependentElement + " depends on class " + dependsOn;
 			}
 			
 			if(element instanceof Interface) {
-				userMessage = dependentElement + " depends on interface " + dependsOn;
+				userMessage = "Class " + dependentElement + " depends on interface " + dependsOn;
 			}
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Dependency", null, userMessage, MessageDialog.INFORMATION,
@@ -351,11 +363,7 @@ public class UmlClassDiagramReader {
 			//MessageDialog.openInformation(null, "Info", "Entrei aqui");
 		}
 
-		
-
-		
-		
-
+	
 
 	}
 	
