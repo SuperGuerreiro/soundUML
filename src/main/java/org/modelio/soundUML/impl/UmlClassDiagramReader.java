@@ -36,7 +36,6 @@ public class UmlClassDiagramReader {
 			//Nome da classe
 			String className = mObj.getName();
 			
-			//TODO: Ver se a class é abstract
 			boolean isAbstract = ((Class) mObj).isIsAbstract();
 			
 			if(isAbstract) {
@@ -52,7 +51,6 @@ public class UmlClassDiagramReader {
 			dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
 			int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
 		
-			
 			//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
 			// Iterar os child objects deste nó (cuidado que pode causar ciclos)
 			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
@@ -70,10 +68,11 @@ public class UmlClassDiagramReader {
 			String unparsedAttributeType = ((Attribute) mObj).getType().toString();
 			String parsedAttributeType = parseType(unparsedAttributeType);
 			
-			//TODO: Dizer se o attributo é privado ou público
+			//Visibility (private, public, etc)
+			String attVisibility = ((Attribute) mObj).getVisibility().getName();
 			
-			
-			String userMessage = "Attribute " + attributeName + " from class " + attributeClass + " of the type " + parsedAttributeType;
+			String userMessage = attVisibility + " attribute " + attributeName + ", of the type " + parsedAttributeType 
+					+ ", from class " + attributeClass;
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Attribute", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
