@@ -84,23 +84,51 @@ public class UmlClassDiagramReader {
 		
 		//03: Operation/method
 		if(mObj instanceof Operation) {
+			String userMessage = null;
+			
 			//A que classe pertence
 			String operationClass = mObj.getCompositionOwner().getName();
 			//nome da operacao
 			String operationName = mObj.getName();
-			//Parametros da operacao
-			 //EList<Parameter> parameterList = ((Operation) mObj).getIO();
 			
-			//TODO: Tratar dos parametros da operação e se o método é publico ou privado
-
+			//Visibility (private, public, etc)
+			String opVisibilityUnparsed = ((Operation) mObj).getVisibility().getName();
+			String opVisibility = parseVisibility(opVisibilityUnparsed);
 			
-			//O que retorna
+			
+			//O que o método retorna
 			String returnType = ((Operation) mObj).getReturn().getType().toString();
 			String parsedAttributeType = parseType(returnType);
 
-			//Provavelmente vai ter de ser um FOR consoante o nº de parametros que tivermos
-			String userMessage = "Operation " + operationName + " from class " + operationClass + " with parameters " + " and returns the type " + parsedAttributeType;
+			
+			//Parametros da operacao
+			 EList<Parameter> parameterList = ((Operation) mObj).getIO();
+			 if(!parameterList.isEmpty()) {
+				 String parameters = "";
+				 //"parameter NOME, of the type TYPE"
+				 for(Parameter p: parameterList) {
+					 //MessageDialog.openInformation(null, "Info", "Parameter name: ?" + p.getName() + " type? " + p.getType().toString());
+					 String unparsedParameterType = p.getType().toString();
+					 String parsedParameterType = parseType(unparsedParameterType);
+				
+					 parameters = parameters + p.getName() + ", of the type " + parsedParameterType + "; ";
+				 }
+				 
+				 if(parameterList.size() == 1) {
+					 userMessage = opVisibility + " operation " + operationName + ", from class " + operationClass + ", with parameter " 
+							 + parameters + " and returns the type " + parsedAttributeType;
+				 } else {
+					 //Há varios parametros
+					 userMessage = opVisibility + " operation " + operationName + ", from class " + operationClass + ", with " + parameterList.size()
+					 		+ " parameters: " + parameters + " and returns the type " + parsedAttributeType; 
+				 }
 
+			 } else {
+				 //Não há parametros
+				 userMessage = opVisibility + " operation " + operationName +  ", from class " + operationClass + ", with no parameters" 
+						 + ", and returns the type " + parsedAttributeType;
+			 }
+			 
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Operation/Method", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
