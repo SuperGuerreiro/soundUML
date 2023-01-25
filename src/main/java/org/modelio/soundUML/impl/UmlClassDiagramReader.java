@@ -122,17 +122,21 @@ public class UmlClassDiagramReader {
 			
 
 			
-			//Cardinalidades
+			//Multiplicities
 			String multiplicityMinFrom = ((AssociationEnd) mObj).getMultiplicityMin();
 			String multiplicityMaxFrom = ((AssociationEnd) mObj).getMultiplicityMax();
 			
 			String multiplicityMinOpposite = oppositeEnd.getMultiplicityMin();
 			String multiplicityMaxOpposite = oppositeEnd.getMultiplicityMax();
 			
-			MessageDialog.openInformation(null, "Info", "Cardinalidades from: " + multiplicityMinFrom + " to " + multiplicityMaxFrom);
-			MessageDialog.openInformation(null, "Info", "Cardinalidades to: " + multiplicityMinOpposite + " to " + multiplicityMaxOpposite);
-
 			
+			//Parsed strings with multiplicity, ready to be read
+			String multiplicityFrom = parseMultiplicity(multiplicityMinFrom, multiplicityMaxFrom);
+			String multiplicityOpposite = parseMultiplicity(multiplicityMinOpposite, multiplicityMaxOpposite);
+			
+			MessageDialog.openInformation(null, "Info", "Cardinalidades from: " + multiplicityFrom + "teste");
+			MessageDialog.openInformation(null, "Info", "Cardinalidades to: " + multiplicityOpposite);
+
 			
 			//Association
 			if(relationshipValue == 0 && oppositeEndValue == 0) {
@@ -200,8 +204,10 @@ public class UmlClassDiagramReader {
 				//Class that "owns" the other side of the arrow
 				String associationTo = oppositeEnd.getOwner().getName();
 				
-				userMessage = "Composition, where " +  multiplicityMinFrom + " to " + multiplicityMaxFrom + " class " + 
-						associationTo  + " is composed by " +  multiplicityMinOpposite + " to " + multiplicityMaxOpposite + " class " + associationFrom;
+				
+				
+				userMessage = "Composition, where " +  multiplicityFrom + " class " + 
+						associationTo  + " is composed by " +  multiplicityOpposite + " class " + associationFrom;
 				
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
@@ -334,6 +340,26 @@ public class UmlClassDiagramReader {
 	private String parseType(String unparsedType) {		
 		return unparsedType.substring(1, unparsedType.indexOf("'", 1));
 		
+	}
+	
+
+	/*Method to parse multiplicity from one AssociationEnd,
+	 * Returns the string with the multiplicity, ready to be read by the TTS
+	 */
+	private String parseMultiplicity(String min, String max){		
+		//a to a --> a
+		if(min.equalsIgnoreCase(max)) {
+			return min;
+		}
+		
+		// a to * --> a to many
+		if(max.equals("*")) {
+			return (min + " or more ");
+		}
+		
+		//a to b
+		return min + " to " + max;
+
 	}
 	
 /* 
