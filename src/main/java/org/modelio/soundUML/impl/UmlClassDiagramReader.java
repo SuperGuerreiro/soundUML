@@ -135,7 +135,6 @@ public class UmlClassDiagramReader {
 				
 				//Ver se é navegável só me faz falta quando já sei que estamos a lidar com association
 				boolean isNavigable = ((AssociationEnd) mObj).isNavigable(); 
-				//MessageDialog.openInformation(null, "Info", "É association: " + aggregationValue + " é navegável?: " + isNavigable);
 				
 				/* Penso que se isNavigable for true, temos sempre uma classe Target 
 				 * Este tipo de relationship só aparece uma vez no diagrama (do lado da associationFrom)
@@ -163,11 +162,11 @@ public class UmlClassDiagramReader {
 					//Class that "owns" the other side of the arrow
 					String associationTo = oppositeEnd.getOwner().getName();
 					
+					//Possible TODO: Provavelmente aqui deveria existir role também, mas não é urgente
+					
 					userMessage = "Association between " + multiplicityOpposite + " class " + associationFrom 
 							+ " and " + multiplicityFrom + " class " + associationTo;
 					
-
-				
 				}
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Association", null, userMessage, MessageDialog.INFORMATION,
@@ -179,13 +178,12 @@ public class UmlClassDiagramReader {
 			}
 
 			//Aggregation
-			if(relationshipValue == 0 && oppositeEndValue == 1) {
-				//MessageDialog.openInformation(null, "Info", "É aggregation: " );
-				
+			if(relationshipValue == 0 && oppositeEndValue == 1) {				
 				//Class that "owns" the other side of the arrow
 				String associationTo = oppositeEnd.getOwner().getName();
 				
-				userMessage = "Aggregation, where class " + associationFrom + " is part of class " + associationTo;
+				userMessage = "Aggregation, where " + multiplicityOpposite + " class " + associationFrom 
+						+ " is part of " + multiplicityFrom + " class " + associationTo;
 
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
@@ -200,12 +198,8 @@ public class UmlClassDiagramReader {
 			
 			//Composition
 			if(relationshipValue == 0 && oppositeEndValue == 2) {
-				MessageDialog.openInformation(null, "Info", "É composition: " );
-				
 				//Class that "owns" the other side of the arrow
 				String associationTo = oppositeEnd.getOwner().getName();
-				
-				
 				
 				userMessage = "Composition, where " +  multiplicityFrom + " class " + 
 						associationTo  + " is composed by " +  multiplicityOpposite + " class " + associationFrom;
