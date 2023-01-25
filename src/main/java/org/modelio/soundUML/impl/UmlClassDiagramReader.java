@@ -69,7 +69,8 @@ public class UmlClassDiagramReader {
 			String parsedAttributeType = parseType(unparsedAttributeType);
 			
 			//Visibility (private, public, etc)
-			String attVisibility = ((Attribute) mObj).getVisibility().getName();
+			String attVisibilityUnparsed = ((Attribute) mObj).getVisibility().getName();
+			String attVisibility = parseVisibility(attVisibilityUnparsed);
 			
 			String userMessage = attVisibility + " attribute " + attributeName + ", of the type " + parsedAttributeType 
 					+ ", from class " + attributeClass;
@@ -335,6 +336,18 @@ public class UmlClassDiagramReader {
 	private String parseType(String unparsedType) {		
 		return unparsedType.substring(1, unparsedType.indexOf("'", 1));
 		
+	}
+	
+	private String parseVisibility(String unparsedVisibility) {	
+		if(unparsedVisibility.equalsIgnoreCase("PackageVisibility")) {
+			return "Package";
+		}
+		
+		if(unparsedVisibility.equalsIgnoreCase("VisibilityUndefined")) {
+			return "Undefined";
+		}
+		
+		return unparsedVisibility;
 	}
 	
 
