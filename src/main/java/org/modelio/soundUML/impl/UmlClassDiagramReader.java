@@ -12,6 +12,8 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
+import org.modelio.metamodel.uml.infrastructure.properties.LocalPropertyTable;
+import org.modelio.metamodel.uml.infrastructure.properties.PropertyTable;
 import org.modelio.metamodel.uml.statik.*;
 
 
@@ -105,14 +107,84 @@ public class UmlClassDiagramReader {
 		
 		//04 Association 
 		//Agregation e composition também?
+		
 		if(mObj instanceof AssociationEnd) {
+			String userMessage = null;
+			
 			//De onde liga 
 			String associationFrom = mObj.getCompositionOwner().getName();
+			
+			//EList<PropertyTable> properties = ((AssociationEnd) mObj).getProperties();
+			int aggregationValue = ((AssociationEnd) mObj).getAggregation().getValue();
+			
+			AssociationEnd oppositeEnd = ((AssociationEnd) mObj).getOpposite();
+			int oppositeEndValue = oppositeEnd.getAggregation().getValue();
+			
+			//Cardinalidades
+			String multiplicityMinFrom = ((AssociationEnd) mObj).getMultiplicityMin();
+			String multiplicityMaxFrom = ((AssociationEnd) mObj).getMultiplicityMax();
+			
+			String multiplicityMinOpposite = oppositeEnd.getMultiplicityMin();
+			String multiplicityMaxOpposite = oppositeEnd.getMultiplicityMax();
+			
+			MessageDialog.openInformation(null, "Info", "Cardinalidades from: " + multiplicityMinFrom + " to " + multiplicityMaxFrom);
+			MessageDialog.openInformation(null, "Info", "Cardinalidades to: " + multiplicityMinOpposite + " to " + multiplicityMaxOpposite);
 
+			
+			
+			//É association
+			if(aggregationValue == 0 && oppositeEndValue == 0) {
+				
+				//Ver se é navegável só me faz falta quando já sei que estamos a lidar com association
+				boolean isNavigable = ((AssociationEnd) mObj).isNavigable(); 
+				//MessageDialog.openInformation(null, "Info", "É association: " + aggregationValue + " é navegável?: " + isNavigable);
+
+				//Penso que se isNavigable for true, temos sempre uma classe Target 
+				//Esta relationship só aparece uma vez no diagrama (do lado da associationFrom)
+				if(isNavigable) {
+					//Obter o target para onde vamos
+					String associationTo = ((AssociationEnd) mObj).getTarget().getName();
+					
+					//TODO: Cardinalidades e Roles
+					
+					userMessage = "Association from class " + associationFrom + " to class " + associationTo;
+					
+					
+				} else {
+					//se não é navegável, é só associação normal, sem pontas
+					
+					String associationTo = oppositeEnd.getOwner().getName();
+					userMessage = "Association between class " + associationFrom + " and class " + associationTo;
+					
+					//TODO: Cardinalidades e Roles
+
+				
+				}
+				
+				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Relationship", null, userMessage, MessageDialog.INFORMATION,
+						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+				// Set the file path and text to be read
+				dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
+				int result = dialog.open();
+				
+			}
+
+				
+			if(aggregationValue == 1) // É Aggregation
+				MessageDialog.openInformation(null, "Info", "É aggregation: " + aggregationValue );
+				
+			if(aggregationValue == 2) // É composition
+				MessageDialog.openInformation(null, "Info", "É composition: " + aggregationValue );
+			
+			MessageDialog.openInformation(null, "Info", "opposite value: " + oppositeEndValue );
+
+			
+
+			
 			//Para onde liga
 			//String associationFrom = mObj.getCompositionOwner().getName();
 
-			MessageDialog.openInformation(null, "Info", mObj.getName() + " " + mObj.getMClass());
+			//MessageDialog.openInformation(null, "Info", mObj.getName() + " " + mObj.getMClass());
 
 			//TODO: Resolver esta parte (não sei como)
 			
@@ -130,14 +202,53 @@ public class UmlClassDiagramReader {
 				MessageDialog.openInformation(null, "Info", "Multiplicity Max: " + test + " Multiplicity Min: " + test2);
 			}
 			
-			String userMessage = "Relationship from class " + associationFrom + " to class " ;
 			
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Relationship", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
-			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
-			int result = dialog.open();
 			
+			
+			
+			
+			
+			/*Poderá ser preciso para as class associations, mas ver depois
+			//Ler se tem uma class association ou nao
+			 //Iterar os child objects deste nó (cuidado que pode causar ciclos)
+			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
+			for (MObject c : compChldrn) {
+				readObject(c);
+			}
+			*/
+			
+		}
+		
+		if(mObj instanceof Association) {
+			
+			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
+			for (MObject child : compChldrn) {
+				/*
+				 * 10 Class Association
+				 * association class is a class that is part of an association relationship between two other classes
+				 * An association class provide additional information about the association relationship between the two other classes. 
+				 */
+				// In Modelio, a ClassAssociation belongs to an Association, this means this has to stay within an association
+				if(child instanceof ClassAssociation){
+					String parentRelation = child.getCompositionOwner().getName();
+								
+					//Get Associated Class
+					String associatedClass = ((ClassAssociation) child).getClassPart().getName();
+					
+					
+					String userMessage = "An association class named " + associatedClass + " between " + parentRelation;
+
+					
+					MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class Association", null, userMessage, MessageDialog.INFORMATION,
+							new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					// Set the file path and text to be read
+					dialog.setStrings("/org/modelio/soundUML/sounds/07dependency.wav", userMessage); 
+					int result = dialog.open();
+
+				} else
+					continue;
+				
+			}
 			
 		}
 		
@@ -153,7 +264,7 @@ public class UmlClassDiagramReader {
 			String childClassUnparsed = ((Generalization) mObj).getSubType().toString();
 			String childClassParsed = parseType(childClassUnparsed);
 			
-			String userMessage = childClassParsed + " is a " + parentClassParsed;
+			String userMessage = childClassParsed + " is a " + parentClassParsed + " and extends it";
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
@@ -200,12 +311,8 @@ public class UmlClassDiagramReader {
 		
 		//09 Composition
 		
-		//10 Class Association
-		if(mObj instanceof ClassAssociation) {
-			//Get Associated Class
-			((ClassAssociation) mObj).getClassPart();
-			
-		}
+		
+
 		
 		//11 Package
 		if(mObj instanceof Package) {
