@@ -32,12 +32,19 @@ public class UmlClassDiagramReader {
 	public void readObject(MObject mObj) {
 		//Class
 		if (mObj instanceof Class) {
+			String userMessage = null;
 			//Nome da classe
 			String className = mObj.getName();
 			
 			//TODO: Ver se a class é abstract
+			boolean isAbstract = ((Class) mObj).isIsAbstract();
 			
-			String userMessage = "Class with name " + className;
+			if(isAbstract) {
+				userMessage = "Abstract class with name " + className;
+			} else {
+				userMessage = "Class with name " + className;
+			}
+			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 			
@@ -45,7 +52,6 @@ public class UmlClassDiagramReader {
 			dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
 			int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
 		
-			
 			
 			//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
 			// Iterar os child objects deste nó (cuidado que pode causar ciclos)
@@ -204,7 +210,6 @@ public class UmlClassDiagramReader {
 				userMessage = "Composition, where " +  multiplicityFrom + " class " + 
 						associationTo  + " is composed by " +  multiplicityOpposite + " class " + associationFrom;
 				
-				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
 						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 				// Set the file path and text to be read
@@ -213,10 +218,6 @@ public class UmlClassDiagramReader {
 				
 			}
 
-			
-			
-		
-			
 			/*Poderá ser preciso para as class associations, mas ver depois
 			//Ler se tem uma class association ou nao
 			 //Iterar os child objects deste nó (cuidado que pode causar ciclos)
