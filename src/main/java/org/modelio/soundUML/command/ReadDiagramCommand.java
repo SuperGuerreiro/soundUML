@@ -75,6 +75,8 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 		for (AbstractDiagram d : elements) {
 			// Vai buscar os elementos representados neste diagrama
 			EList<Element> diagramElements = d.getRepresented();
+			uml.getInheritanceElements(diagramElements);
+			
 			// Iterar os elementos deste diagrama
 			for (Element e : diagramElements) {
 

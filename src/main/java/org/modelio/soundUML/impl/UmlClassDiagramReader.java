@@ -23,12 +23,13 @@ import org.modelio.metamodel.uml.statik.*;
 public class UmlClassDiagramReader {
 	
 	/*
-	 * Key -> UUID
-	 * Value -> true or false
-	 * Only working for class association
+	 *ArrayList that stores the unique identifier of each class
+	 *Keeps track of what classes have already been read
 	 */	
 	private ArrayList<String> classList = new ArrayList<String>();
-
+	
+	private ArrayList<Element> generalizationList = new ArrayList<Element>();
+	
 	public UmlClassDiagramReader() {
 
 	}
@@ -60,11 +61,17 @@ public class UmlClassDiagramReader {
 				dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
 				int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
 			
-				//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
+				//Ler os attributes operações e relações desta classe -> Faz sentido ser aqui
 				// Iterar os child objects deste nó (cuidado que pode causar ciclos)
 				List<? extends MObject> compChldrn = mObj.getCompositionChildren();
 				for (MObject c : compChldrn) {
 					readObject(c);
+				}
+				
+				//Finally, if it has any incoming generalization/inheritances, read it here:
+				ArrayList<Generalization> gList = getInheritancesWithSameParent(uuid);
+				for(Generalization g: gList) {
+					readObject(g);
 				}
 				
 				//Putting the class with this id into the list, ensures that the class is read only once
@@ -296,6 +303,9 @@ public class UmlClassDiagramReader {
 			String childClassUnparsed = ((Generalization) mObj).getSubType().toString();
 			String childClassParsed = parseType(childClassUnparsed);
 			
+			String discriminator = ((Generalization) mObj).getDiscriminator();
+			
+			
 			String userMessage = childClassParsed + " is a " + parentClassParsed + ", and extends its functionalities";
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
@@ -471,6 +481,39 @@ public class UmlClassDiagramReader {
 				
 		//a to b
 		return min + " to " + max;
+
+	}
+	
+	//Iterar a lista toda para obter apenas os elementos que são inheritance
+	//This method NEEDS to be called before readObject()
+	public void getInheritanceElements(EList<Element> elementList) {
+		
+		for(Element e: elementList) {		
+			if(e instanceof Generalization) {
+				generalizationList.add(e);
+			} else {
+				continue;
+
+			}
+		}
+		
+	}
+	
+	//Returns all the inheritances with the same parent
+	//This method is needed to read all the incoming inheritance relationships of a given class
+	private ArrayList<Generalization> getInheritancesWithSameParent(String classUuid) {
+		ArrayList<Generalization> res = new ArrayList<Generalization>();
+		
+		for(Element g: generalizationList) {
+			NameSpace classNameSpace = ((Generalization) g).getSuperType();
+			
+			if(classNameSpace.getUuid().equalsIgnoreCase(classUuid)) {
+				res.add((Generalization) g);
+				
+			}
+		}
+		
+		return res;
 
 	}
 	
