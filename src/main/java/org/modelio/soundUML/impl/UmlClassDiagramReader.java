@@ -189,7 +189,7 @@ public class UmlClassDiagramReader {
 			String multiplicityFrom = parseMultiplicity(multiplicityMinFrom, multiplicityMaxFrom);
 			String multiplicityOpposite = parseMultiplicity(multiplicityMinOpposite, multiplicityMaxOpposite);
 			
-			//Association
+			//Association (neither incoming nor outgoing)
 			if(relationshipValue == 0 && oppositeEndValue == 0) {
 				
 				//Ver se é navegável só me faz falta quando já sei que estamos a lidar com association
@@ -236,7 +236,7 @@ public class UmlClassDiagramReader {
 				
 			}
 
-			//Aggregation
+			//Outgoing Aggregation
 			if(relationshipValue == 0 && oppositeEndValue == 1) {				
 				//Class that "owns" the other side of the arrow
 				String associationTo = oppositeEnd.getOwner().getName();
@@ -255,7 +255,7 @@ public class UmlClassDiagramReader {
 			}
 			
 			
-			//Composition
+			//Outgoing Composition
 			if(relationshipValue == 0 && oppositeEndValue == 2) {
 				//Class that "owns" the other side of the arrow
 				String associationTo = oppositeEnd.getOwner().getName();
@@ -270,6 +270,7 @@ public class UmlClassDiagramReader {
 				int result = dialog.open();
 				
 			}
+			
 
 			//Poderá ser preciso para as class associations, mas ver depois
 			//Ler se tem uma class association ou nao

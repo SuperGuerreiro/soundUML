@@ -91,7 +91,7 @@ public class FindElementInDiagramCommand extends DefaultModuleCommandHandler {
 					for (MObject c : compChldrn) {
 						MessageDialog.openInformation(null, "Info", c.getName() + " " + c.getMClass());
 
-						UmlClassDiagramReader uml = new UmlClassDiagramReader(c);
+						UmlClassDiagramReader uml = new UmlClassDiagramReader();
 						uml.readObject(c);
 						// TODO: Ver se consigo retornar info extra relativamente a este element
 						// Provavelmente a solução será fazer uma especie de "parser" onde vou ter de
