@@ -97,10 +97,17 @@ public class UmlClassDiagramReader {
 			String opVisibility = parseVisibility(opVisibilityUnparsed);
 			
 			
-			//O que o método retorna
-			String returnType = ((Operation) mObj).getReturn().getType().toString();
-			String parsedAttributeType = parseType(returnType);
-
+			String returnMessage = null;
+			//Verificar se o método retorna alguma coisa
+			if(((Operation) mObj).getReturn() != null) {
+				String returnType = ((Operation) mObj).getReturn().getType().toString();
+				String parsedReturnType = parseType(returnType);
+				
+				returnMessage = "and returns the type " + parsedReturnType;
+				
+			} else {
+				returnMessage = "and is void";
+			}
 			
 			//Parametros da operacao
 			 EList<Parameter> parameterList = ((Operation) mObj).getIO();
@@ -117,19 +124,20 @@ public class UmlClassDiagramReader {
 				 
 				 if(parameterList.size() == 1) {
 					 userMessage = opVisibility + " operation " + operationName + ", from class " + operationClass + ", with parameter " 
-							 + parameters + "and returns the type " + parsedAttributeType;
+							 + parameters + returnMessage;
 				 } else {
 					 //Há varios parametros
 					 userMessage = opVisibility + " operation " + operationName + ", from class " + operationClass + ", with " + parameterList.size()
-					 		+ " parameters: " + parameters + "and returns the type " + parsedAttributeType; 
+					 		+ " parameters: " + parameters + returnMessage; 
 				 }
 
 			 } else {
 				 //Não há parametros
 				 userMessage = opVisibility + " operation " + operationName +  ", from class " + operationClass + ", with no parameters" 
-						 + ", and returns the type " + parsedAttributeType;
+						 + ", " + returnMessage;
 			 }
-			 
+
+ 
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Operation/Method", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
@@ -218,7 +226,7 @@ public class UmlClassDiagramReader {
 				String associationTo = oppositeEnd.getOwner().getName();
 				
 				userMessage = "Aggregation, where " + multiplicityOpposite + " class " + associationFrom 
-						+ " is part of " + multiplicityFrom + " class " + associationTo;
+						+ ", is part of " + multiplicityFrom + " class " + associationTo;
 
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
@@ -237,7 +245,7 @@ public class UmlClassDiagramReader {
 				String associationTo = oppositeEnd.getOwner().getName();
 				
 				userMessage = "Composition, where " +  multiplicityFrom + " class " + 
-						associationTo  + " is composed by " +  multiplicityOpposite + " class " + associationFrom;
+						associationTo  + ", is composed by " +  multiplicityOpposite + " class " + associationFrom;
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
 						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
