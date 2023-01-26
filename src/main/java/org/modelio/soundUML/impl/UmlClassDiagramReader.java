@@ -30,6 +30,7 @@ public class UmlClassDiagramReader {
 	}
 
 	public void readObject(MObject mObj) {
+		
 		//Class
 		if (mObj instanceof Class) {
 			String userMessage = null;
@@ -116,11 +117,11 @@ public class UmlClassDiagramReader {
 				 
 				 if(parameterList.size() == 1) {
 					 userMessage = opVisibility + " operation " + operationName + ", from class " + operationClass + ", with parameter " 
-							 + parameters + " and returns the type " + parsedAttributeType;
+							 + parameters + "and returns the type " + parsedAttributeType;
 				 } else {
 					 //Há varios parametros
 					 userMessage = opVisibility + " operation " + operationName + ", from class " + operationClass + ", with " + parameterList.size()
-					 		+ " parameters: " + parameters + " and returns the type " + parsedAttributeType; 
+					 		+ " parameters: " + parameters + "and returns the type " + parsedAttributeType; 
 				 }
 
 			 } else {
@@ -198,8 +199,8 @@ public class UmlClassDiagramReader {
 					
 					//Possible TODO: Provavelmente aqui deveria existir role também, mas não é urgente
 					
-					userMessage = "Association between " + multiplicityOpposite + " class " + associationFrom 
-							+ " and " + multiplicityFrom + " class " + associationTo;
+					userMessage = "Association, between " + multiplicityOpposite + " class " + associationFrom 
+							+ ", and " + multiplicityFrom + " class " + associationTo;
 					
 				}
 				
@@ -302,7 +303,7 @@ public class UmlClassDiagramReader {
 			String childClassUnparsed = ((Generalization) mObj).getSubType().toString();
 			String childClassParsed = parseType(childClassUnparsed);
 			
-			String userMessage = childClassParsed + " is a " + parentClassParsed + " and extends it";
+			String userMessage = childClassParsed + " is a " + parentClassParsed + ", and extends it";
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
@@ -342,11 +343,11 @@ public class UmlClassDiagramReader {
 						
 			
 			if(element instanceof Class) {
-				userMessage = "Class " + dependentElement + " depends on class " + dependsOn;
+				userMessage = "Class " + dependentElement + ", depends on class " + dependsOn;
 			}
 			
 			if(element instanceof Interface) {
-				userMessage = "Class " + dependentElement + " depends on interface " + dependsOn;
+				userMessage = "Class " + dependentElement + ", depends on interface " + dependsOn;
 			}
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Dependency", null, userMessage, MessageDialog.INFORMATION,
@@ -361,6 +362,15 @@ public class UmlClassDiagramReader {
 		//11 Package
 		if(mObj instanceof Package) {
 			//MessageDialog.openInformation(null, "Info", "Entrei aqui");
+			String packageName = mObj.getCompositionOwner().getName();
+			
+			String userMessage = "Package " + packageName;
+			
+			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Package", null, userMessage, MessageDialog.INFORMATION,
+					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+			// Set the file path and text to be read
+			dialog.setStrings("/org/modelio/soundUML/sounds/11package.wav", userMessage); 
+			int result = dialog.open();
 		}
 
 	
