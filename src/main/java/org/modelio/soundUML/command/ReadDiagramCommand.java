@@ -65,6 +65,10 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 
 		// Dá-me os diagramas UML existentes neste projecto
 		Collection<AbstractDiagram> elements = session.findByClass(AbstractDiagram.class);
+		
+		//Criar a classe que vai ler o diagrama
+		UmlClassDiagramReader uml = new UmlClassDiagramReader();
+
 
 		// Iterar todos os diagramas existentes (posso ter dentro deste projecto um
 		// class diagram, um state machine, etc...)
@@ -81,7 +85,6 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 				 */
 				if (e.getCompositionOwner().getCompositionOwner() != null && e.getCompositionOwner().getCompositionOwner() instanceof Project ) {
 					//MessageDialog.openInformation(null, "Info", e.getName() + " " + e.getMClass());
-					UmlClassDiagramReader uml = new UmlClassDiagramReader(e);
 					uml.readObject(e);
 				}
 

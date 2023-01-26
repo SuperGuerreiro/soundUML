@@ -1,6 +1,7 @@
 package org.modelio.soundUML.impl;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -12,8 +13,6 @@ import org.modelio.vcore.smkernel.mapi.MObject;
 import org.modelio.metamodel.uml.infrastructure.Dependency;
 import org.modelio.metamodel.uml.infrastructure.Element;
 import org.modelio.metamodel.uml.infrastructure.ModelElement;
-import org.modelio.metamodel.uml.infrastructure.properties.LocalPropertyTable;
-import org.modelio.metamodel.uml.infrastructure.properties.PropertyTable;
 import org.modelio.metamodel.uml.statik.*;
 
 
@@ -22,42 +21,59 @@ import org.modelio.metamodel.uml.statik.*;
  * Each element has it's own unique sound and attributes
  */
 public class UmlClassDiagramReader {
+	
+	/*
+	 * Key -> UUID
+	 * Value -> true or false
+	 * Only working for class association
+	 */	
+	private ArrayList<String> classList = new ArrayList<String>();
 
-	private MObject mObject;
+	public UmlClassDiagramReader() {
 
-	public UmlClassDiagramReader(MObject mObject) {
-		this.mObject = mObject;
 	}
 
 	public void readObject(MObject mObj) {
 		
 		//Class
 		if (mObj instanceof Class) {
-			String userMessage = null;
-			//Nome da classe
-			String className = mObj.getName();
+			String userMessage = "";
 			
-			boolean isAbstract = ((Class) mObj).isIsAbstract();
+			//Object unique identifier.
+			String uuid = mObj.getUuid();
+			if(!classList.contains(uuid)) {
+				//Nome da classe
+				String className = mObj.getName();
+				
+				boolean isAbstract = ((Class) mObj).isIsAbstract();
+				
+				if(isAbstract) {
+					userMessage = "Abstract class with name " + className;
+				} else {
+					userMessage = "Class with name " + className;
+				}
+				
+				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class", null, userMessage, MessageDialog.INFORMATION,
+						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+				
+				// Set the file path and text to be read
+				dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
+				int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
 			
-			if(isAbstract) {
-				userMessage = "Abstract class with name " + className;
-			} else {
-				userMessage = "Class with name " + className;
+				//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
+				// Iterar os child objects deste nó (cuidado que pode causar ciclos)
+				List<? extends MObject> compChldrn = mObj.getCompositionChildren();
+				for (MObject c : compChldrn) {
+					readObject(c);
+				}
+				
+				//Putting the class with this id into the list, ensures that the class is read only once
+				//MessageDialog.openInformation(null, "Info", "classname: " + className + " contains? " + classList.contains(uuid));
+				classList.add(uuid);
+				//MessageDialog.openInformation(null, "Info", "Adicionei à lista com este id: " + uuid + " classname: " + className + " contains? " + classList.contains(uuid));
+				
 			}
 			
-			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
-			
-			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
-			int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
-		
-			//Ler os attributes desta classe e as suas relações -> Faz sentido ser aqui
-			// Iterar os child objects deste nó (cuidado que pode causar ciclos)
-			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
-			for (MObject c : compChldrn) {
-				readObject(c);
-			}
 		}
 
 		if (mObj instanceof Attribute) {
@@ -371,8 +387,13 @@ public class UmlClassDiagramReader {
 				if(child instanceof ClassAssociation){
 					Association ass = ((ClassAssociation) child).getAssociationPart();
 					
-					EList<AssociationEnd> classEnd = ass.getEnd();
+					//Get Associated Class	
+					Class associatedClass = ((ClassAssociation) child).getClassPart();
+					String associatedClassName = associatedClass.getName();
 					
+					
+					//Get all the ends of this association (I think they can only be two, but in the case they are n-ends, it's working)
+					EList<AssociationEnd> classEnd = ass.getEnd();
 					String classNames = "";
 					int i = 0;
 					for(AssociationEnd aEnd : classEnd) {
@@ -387,13 +408,9 @@ public class UmlClassDiagramReader {
 						}
 						i++;
 					}
+						
 					
-								
-					//Get Associated Class
-					String associatedClass = ((ClassAssociation) child).getClassPart().getName();
-					
-					
-					String userMessage = "An association class named " + associatedClass + ", between" + classNames;
+					String userMessage = "An association class named " + associatedClassName + ", between" + classNames;
 
 					
 					MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class Association", null, userMessage, MessageDialog.INFORMATION,
@@ -401,6 +418,10 @@ public class UmlClassDiagramReader {
 					// Set the file path and text to be read
 					dialog.setStrings("/org/modelio/soundUML/sounds/10classAssociationA.wav", userMessage); 
 					int result = dialog.open();
+					
+					//Reads the class directly, this way we ensure that the class and all its attributes, operations and relations
+					// are read right after being mentioned in the class association
+					readObject(associatedClass);
 
 				} else
 					continue;
