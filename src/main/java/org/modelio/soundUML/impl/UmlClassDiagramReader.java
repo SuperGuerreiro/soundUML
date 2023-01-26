@@ -295,7 +295,7 @@ public class UmlClassDiagramReader {
 			String childClassUnparsed = ((Generalization) mObj).getSubType().toString();
 			String childClassParsed = parseType(childClassUnparsed);
 			
-			String userMessage = childClassParsed + " is a " + parentClassParsed + ", and extends it";
+			String userMessage = childClassParsed + " is a " + parentClassParsed + ", and extends its functionalities";
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
 					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
@@ -461,6 +461,7 @@ public class UmlClassDiagramReader {
 		if(min.equalsIgnoreCase(max)) {
 			return min;
 		}
+		
 		
 		// a to * --> a to many
 		if(max.equals("*")) {
