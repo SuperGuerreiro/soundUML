@@ -353,7 +353,6 @@ public class UmlClassDiagramReader {
 		
 		//11 Package
 		if(mObj instanceof Package) {
-			//MessageDialog.openInformation(null, "Info", "Entrei aqui");
 			String packageName = mObj.getCompositionOwner().getName();
 			
 			String userMessage = "Package " + packageName;
@@ -374,8 +373,9 @@ public class UmlClassDiagramReader {
 	 * 10 Class Association
 	 * association class is a class that is part of an association relationship between two other classes
 	 * An association class provide additional information about the association relationship between the two other classes. 
+	 * 
+	 * In Modelio, a ClassAssociation belongs to an Association, this means this has to stay within an association
 	 */
-	// In Modelio, a ClassAssociation belongs to an Association, this means this has to stay within an association
 	private void readClassAssociation(MObject mObj) {
 	
 		if(mObj instanceof Association) {
@@ -420,7 +420,7 @@ public class UmlClassDiagramReader {
 					int result = dialog.open();
 					
 					//Reads the class directly, this way we ensure that the class and all its attributes, operations and relations
-					// are read right after being mentioned in the class association
+					// are read right after being shown the class association message
 					readObject(associatedClass);
 
 				} else
@@ -472,6 +472,8 @@ public class UmlClassDiagramReader {
 
 	}
 	
+	
+/*------------------------------------------------------------------------*/	
 /* 
     //Useful for debugging in eclipse
 	//Show an information dialog box.
@@ -498,4 +500,5 @@ public class UmlClassDiagramReader {
 	}
 
 */
+	
 }
