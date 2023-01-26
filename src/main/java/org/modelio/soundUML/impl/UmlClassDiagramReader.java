@@ -97,7 +97,7 @@ public class UmlClassDiagramReader {
 			String opVisibility = parseVisibility(opVisibilityUnparsed);
 			
 			
-			String returnMessage = null;
+			String returnMessage = "";
 			//Verificar se o método retorna alguma coisa
 			if(((Operation) mObj).getReturn() != null) {
 				String returnType = ((Operation) mObj).getReturn().getType().toString();
@@ -255,49 +255,17 @@ public class UmlClassDiagramReader {
 				
 			}
 
-			/*Poderá ser preciso para as class associations, mas ver depois
+			//Poderá ser preciso para as class associations, mas ver depois
 			//Ler se tem uma class association ou nao
 			 //Iterar os child objects deste nó (cuidado que pode causar ciclos)
 			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
 			for (MObject c : compChldrn) {
-				readObject(c);
+				readClassAssociation(c);
 			}
-			*/
+		
 			
 		}
 		
-		if(mObj instanceof Association) {
-			
-			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
-			for (MObject child : compChldrn) {
-				/*
-				 * 10 Class Association
-				 * association class is a class that is part of an association relationship between two other classes
-				 * An association class provide additional information about the association relationship between the two other classes. 
-				 */
-				// In Modelio, a ClassAssociation belongs to an Association, this means this has to stay within an association
-				if(child instanceof ClassAssociation){
-					String parentRelation = child.getCompositionOwner().getName();
-								
-					//Get Associated Class
-					String associatedClass = ((ClassAssociation) child).getClassPart().getName();
-					
-					
-					String userMessage = "An association class named " + associatedClass + " between " + parentRelation;
-
-					
-					MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class Association", null, userMessage, MessageDialog.INFORMATION,
-							new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
-					// Set the file path and text to be read
-					dialog.setStrings("/org/modelio/soundUML/sounds/07dependency.wav", userMessage); 
-					int result = dialog.open();
-
-				} else
-					continue;
-				
-			}
-			
-		}
 		
 		
 		//05 Generalization/Inheritance
@@ -383,6 +351,65 @@ public class UmlClassDiagramReader {
 
 	
 
+	}
+	
+	
+	/*
+	 * 10 Class Association
+	 * association class is a class that is part of an association relationship between two other classes
+	 * An association class provide additional information about the association relationship between the two other classes. 
+	 */
+	// In Modelio, a ClassAssociation belongs to an Association, this means this has to stay within an association
+	private void readClassAssociation(MObject mObj) {
+	
+		if(mObj instanceof Association) {
+			
+			//Iterate the children of the association
+			List<? extends MObject> compChldrn = mObj.getCompositionChildren();
+			for (MObject child : compChldrn) {
+				
+				if(child instanceof ClassAssociation){
+					Association ass = ((ClassAssociation) child).getAssociationPart();
+					
+					EList<AssociationEnd> classEnd = ass.getEnd();
+					
+					String classNames = "";
+					int i = 0;
+					for(AssociationEnd aEnd : classEnd) {
+						String className = aEnd.getOwner().getName();
+						
+						if(i < classEnd.size()-1) {
+							classNames = classNames + " class " + className + " and";
+						}
+						if(i == classEnd.size()-1) {
+							classNames = classNames + " class " + className;
+
+						}
+						i++;
+					}
+					
+								
+					//Get Associated Class
+					String associatedClass = ((ClassAssociation) child).getClassPart().getName();
+					
+					
+					String userMessage = "An association class named " + associatedClass + ", between" + classNames;
+
+					
+					MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class Association", null, userMessage, MessageDialog.INFORMATION,
+							new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					// Set the file path and text to be read
+					dialog.setStrings("/org/modelio/soundUML/sounds/10classAssociationA.wav", userMessage); 
+					int result = dialog.open();
+
+				} else
+					continue;
+				
+			}
+			
+		}
+		
+		
 	}
 	
 	//When using method getType().toString(), we get a long string of characters 
