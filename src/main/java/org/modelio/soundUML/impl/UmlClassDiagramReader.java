@@ -270,7 +270,7 @@ public class UmlClassDiagramReader {
 				userMessage = "Composition, where " +  multiplicityFrom + " class " + 
 						associationTo  + ", is composed by " +  multiplicityOpposite + " class " + associationFrom;
 				
-				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
+				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Composition", null, userMessage, MessageDialog.INFORMATION,
 						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
 				// Set the file path and text to be read
 				dialog.setStrings("/org/modelio/soundUML/sounds/09composition.wav", userMessage); 
