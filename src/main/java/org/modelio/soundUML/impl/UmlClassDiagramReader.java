@@ -2,7 +2,6 @@ package org.modelio.soundUML.impl;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,10 +23,18 @@ import org.modelio.metamodel.uml.statik.*;
  */
 public class UmlClassDiagramReader {
 	
-	static final int END_READING_CODE = 3;
+	private static final String SOUND_PATH_CLASS = "/org/modelio/soundUML/sounds/01class.wav";
+	private static final String SOUND_PATH_ATTRIBUTE = "/org/modelio/soundUML/sounds/02attribute.wav";
+	private static final String SOUND_PATH_OPERATION = "/org/modelio/soundUML/sounds/03operation.wav";
+	private static final String SOUND_PATH_ASSOCIATION = "/org/modelio/soundUML/sounds/04association.wav";
+	private static final String SOUND_PATH_AGGREGATION = "/org/modelio/soundUML/sounds/08aggregation.wav";
+	private static final String SOUND_PATH_COMPOSITION = "/org/modelio/soundUML/sounds/09composition.wav";
+	private static final String SOUND_PATH_INHERITANCE = "/org/modelio/soundUML/sounds/05inheritance.wav";
+	private static final String SOUND_PATH_REALIZATION = "/org/modelio/soundUML/sounds/06realization.wav";
+	private static final String SOUND_PATH_DEPENDENCY = "/org/modelio/soundUML/sounds/07dependency.wav";
+	private static final String SOUND_PATH_PACKAGE = "/org/modelio/soundUML/sounds/11package.wav";
+	private static final String SOUND_PATH_CLASS_ASSOCIATION = "/org/modelio/soundUML/sounds/10classAssociationA.wav";
 	
-	static final String SOUND_PATH_CLASS = "/org/modelio/soundUML/sounds/01class.wav";
-	static final String  SOUND_PATH_ATTRIBUTE = "/org/modelio/soundUML/sounds/02attribute.wav";
 	
 	/*
 	 *ArrayList that stores the unique identifier of each class
@@ -188,7 +195,7 @@ public class UmlClassDiagramReader {
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Operation/Method", null, userMessage, MessageDialog.INFORMATION,
 					dialogOptions, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/03operation.wav", userMessage); 
+			dialog.setStrings(SOUND_PATH_OPERATION, userMessage); 
 			
 			//Adds this specific messageDialog to a linked list that will then be shown to the people
 			messageDialogs.add(dialog);
@@ -265,7 +272,7 @@ public class UmlClassDiagramReader {
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Association", null, userMessage, MessageDialog.INFORMATION,
 						dialogOptions, 0);
 				// Set the file path and text to be read
-				dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
+				dialog.setStrings(SOUND_PATH_ASSOCIATION, userMessage); 
 				
 				//Adds this specific messageDialog to a linked list that will then be shown to the people
 				messageDialogs.add(dialog);
@@ -286,7 +293,7 @@ public class UmlClassDiagramReader {
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
 						dialogOptions, 0);
 				// Set the file path and text to be read
-				dialog.setStrings("/org/modelio/soundUML/sounds/08aggregation.wav", userMessage); 
+				dialog.setStrings(SOUND_PATH_AGGREGATION, userMessage); 
 				
 				//Adds this specific messageDialog to a linked list that will then be shown to the people
 				messageDialogs.add(dialog);
@@ -308,7 +315,7 @@ public class UmlClassDiagramReader {
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Composition", null, userMessage, MessageDialog.INFORMATION,
 						dialogOptions, 0);
 				// Set the file path and text to be read
-				dialog.setStrings("/org/modelio/soundUML/sounds/09composition.wav", userMessage); 
+				dialog.setStrings(SOUND_PATH_COMPOSITION, userMessage); 
 				
 				//Adds this specific messageDialog to a linked list that will then be shown to the people
 				messageDialogs.add(dialog);
@@ -350,7 +357,7 @@ public class UmlClassDiagramReader {
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
 					dialogOptions, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/05inheritance.wav", userMessage); 
+			dialog.setStrings(SOUND_PATH_INHERITANCE, userMessage); 
 			
 			//Adds this specific messageDialog to a linked list that will then be shown to the people
 			messageDialogs.add(dialog);
@@ -371,7 +378,7 @@ public class UmlClassDiagramReader {
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Realization/Implementation", null, userMessage, MessageDialog.INFORMATION,
 					dialogOptions, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/06realization.wav", userMessage); 
+			dialog.setStrings(SOUND_PATH_REALIZATION, userMessage); 
 			
 			//Adds this specific messageDialog to a linked list that will then be shown to the people
 			messageDialogs.add(dialog);
@@ -403,7 +410,7 @@ public class UmlClassDiagramReader {
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Dependency", null, userMessage, MessageDialog.INFORMATION,
 					dialogOptions, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/07dependency.wav", userMessage); 
+			dialog.setStrings(SOUND_PATH_DEPENDENCY, userMessage); 
 			
 			//Adds this specific messageDialog to a linked list that will then be shown to the people
 			messageDialogs.add(dialog);
@@ -415,14 +422,14 @@ public class UmlClassDiagramReader {
 		
 		//11 Package
 		if(mObj instanceof Package) {
-			String packageName = mObj.getCompositionOwner().getName();
+			String packageName = mObj.getName();
 			
-			String userMessage = "Package " + packageName;
+			String userMessage = "Package named " + packageName;
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Package", null, userMessage, MessageDialog.INFORMATION,
 					dialogOptions, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/11package.wav", userMessage); 
+			dialog.setStrings(SOUND_PATH_PACKAGE, userMessage); 
 			
 			//Adds this specific messageDialog to a linked list that will then be shown to the people
 			messageDialogs.add(dialog);
@@ -482,7 +489,7 @@ public class UmlClassDiagramReader {
 					MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class Association", null, userMessage, MessageDialog.INFORMATION,
 							dialogOptions, 0);
 					// Set the file path and text to be read
-					dialog.setStrings("/org/modelio/soundUML/sounds/10classAssociationA.wav", userMessage); 
+					dialog.setStrings(SOUND_PATH_CLASS_ASSOCIATION, userMessage); 
 					
 					//Adds this specific messageDialog to a linked list that will then be shown to the people
 					messageDialogs.add(dialog);
