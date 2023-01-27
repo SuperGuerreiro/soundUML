@@ -46,6 +46,7 @@ public class UmlClassDiagramReader {
 		
 		
 	}
+	
 
 	public void readObject(MObject mObj) {
 		
@@ -502,6 +503,40 @@ public class UmlClassDiagramReader {
 		
 	}
 	
+	/*
+	 * Method that shows the message dialogs contained in a linked list to the users
+	 * Allows for user navigation by iterating on this list and deals with each
+	 * button pressed in the message dialog. 
+	 */
+	public void showMessageDialogs() {
+		
+		int i = 0;
+		while(i < messageDialogs.size()) {
+			MessageDialogExtended currentMessage = messageDialogs.get(i);
+			if(i == 0) {
+				//currentMessage.isFirstMessage();
+			}
+			int result = currentMessage.open();
+			
+			//End reading
+			if(result == 3) {
+				return;
+			}
+			
+			//Back to the previous
+			if(result == 4) {			
+				i--;
+			}
+				
+			//Continue reading
+			if(result == 5) {
+				i++;
+			}
+			
+		}		
+
+	}
+	
 	//When using method getType().toString(), we get a long string of characters 
 	//this method parses what we want
 	private String parseType(String unparsedType) {		
@@ -575,40 +610,11 @@ public class UmlClassDiagramReader {
 
 	}
 	
-	public void showMessageDialogs() {
-		
-		int i = 0;
-		while(i < messageDialogs.size()) {
-			MessageDialogExtended currentMessage = messageDialogs.get(i);
-			if(i == 0) {
-				//currentMessage.isFirstMessage();
-			}
-			int result = currentMessage.open();
-			
-			//End reading
-			if(result == 3) {
-				return;
-			}
-			
-			//Back to the previous
-			if(result == 4) {			
-				i--;
-			}
-				
-			//Continue reading
-			if(result == 5) {
-				i++;
-			}
-			
-		}
-		
-			
-
-	}
-
 
 /*------------------------------------------------------------------------*/	
 
+	
+/*
 
     //Useful for debugging in eclipse
 	//Show an information dialog box.
@@ -633,7 +639,7 @@ public class UmlClassDiagramReader {
 
 		System.out.println(result);
 	}
-
+*/
 
 	
 }

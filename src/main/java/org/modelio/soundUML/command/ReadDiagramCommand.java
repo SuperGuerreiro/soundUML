@@ -108,6 +108,14 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 
 			}
 			
+			
+			/*
+			 * Basically, the diagram is now read and put into a linked list with all the message dialogs, 
+			 * afterwards, this list with all the message dialogs is what the users are shown, allowing them
+			 * to navigate backwards or end the reading at any time
+			 */
+			//
+		
 			uml.showMessageDialogs();
 
 		}
