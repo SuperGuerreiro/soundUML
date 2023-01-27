@@ -1,5 +1,6 @@
 package org.modelio.soundUML.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -55,12 +56,27 @@ public class MessageDialogExtended extends MessageDialog {
 			super.getButton(1).setEnabled(true);
 			super.getButton(2).setEnabled(true);
 			super.getButton(3).setEnabled(true);
+			super.getButton(4).setEnabled(true);
+			super.getButton(5).setEnabled(true);
+
 			break;
 		case 3:
+			//End reading
+			super.buttonPressed(buttonId);
+			break; 
+		case 4:
+			super.buttonPressed(buttonId);
+			break;
+		case 5:
 			super.buttonPressed(buttonId);
 			break;
 		}
 		
+	}
+	
+	
+	public boolean isFirstMessage() {
+		return true;
 	}
 	
 }

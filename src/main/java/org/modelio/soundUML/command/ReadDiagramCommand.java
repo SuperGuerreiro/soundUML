@@ -82,7 +82,7 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 
 				/*
 				 * Esta verificação assegura que só estamos a ler numa primeira fase, 
-				   os elementos mais de topo na hierarquia (À partida são classes e packages)
+				   os elementos mais de topo na hierarquia (À partida são classes e packages, no fundo aqueles cujo owner é a pasta do projecto)
 				   A restante iteração é feita dentro do método readObject(e)
 				 */
 				if (e.getCompositionOwner().getCompositionOwner() != null && e.getCompositionOwner().getCompositionOwner() instanceof Project ) {
@@ -107,6 +107,8 @@ public class ReadDiagramCommand extends DefaultModuleCommandHandler {
 				 */
 
 			}
+			
+			uml.showMessageDialogs();
 
 		}
 

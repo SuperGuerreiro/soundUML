@@ -2,6 +2,8 @@ package org.modelio.soundUML.impl;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,6 +24,11 @@ import org.modelio.metamodel.uml.statik.*;
  */
 public class UmlClassDiagramReader {
 	
+	static final int END_READING_CODE = 3;
+	
+	static final String SOUND_PATH_CLASS = "/org/modelio/soundUML/sounds/01class.wav";
+	static final String  SOUND_PATH_ATTRIBUTE = "/org/modelio/soundUML/sounds/02attribute.wav";
+	
 	/*
 	 *ArrayList that stores the unique identifier of each class
 	 *Keeps track of what classes have already been read
@@ -30,8 +37,14 @@ public class UmlClassDiagramReader {
 	
 	private ArrayList<Element> generalizationList = new ArrayList<Element>();
 	
+	private static String[] dialogOptions = new String[] { "Play Sound", "Read Message", "Reset Buttons", "End Reading", "Back", "Continue"};
+	
+	private LinkedList<MessageDialogExtended> messageDialogs = new LinkedList<MessageDialogExtended>();
+	
+	
 	public UmlClassDiagramReader() {
-
+		
+		
 	}
 
 	public void readObject(MObject mObj) {
@@ -55,11 +68,16 @@ public class UmlClassDiagramReader {
 				}
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class", null, userMessage, MessageDialog.INFORMATION,
-						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
-				
+						dialogOptions, 0);
 				// Set the file path and text to be read
-				dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", userMessage); 
-				int result = dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
+				dialog.setStrings(SOUND_PATH_CLASS, userMessage); 
+				
+				//Adds this specific messageDialog to a linked list that will then be shown to the people
+				messageDialogs.add(dialog);
+			
+				
+				//dialog.open(); //Deixar esta variável result para depois fazer o "End Reading"
+				
 			
 				//Ler os attributes operações e relações desta classe -> Faz sentido ser aqui
 				// Iterar os child objects deste nó (cuidado que pode causar ciclos)
@@ -100,10 +118,14 @@ public class UmlClassDiagramReader {
 					+ ", from class " + attributeClass;
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Attribute", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					dialogOptions, 0);
 			// Set the file path and text to be read
-			dialog.setStrings("/org/modelio/soundUML/sounds/02attribute.wav", userMessage); 
-			int result = dialog.open();
+			dialog.setStrings(SOUND_PATH_ATTRIBUTE, userMessage); 
+			
+			//Adds this specific messageDialog to a linked list that will then be shown to the people
+			messageDialogs.add(dialog);
+			
+			//int result = dialog.open();
 		}
 		
 		//03: Operation/method
@@ -163,10 +185,14 @@ public class UmlClassDiagramReader {
  
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Operation/Method", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					dialogOptions, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/03operation.wav", userMessage); 
-			int result = dialog.open();
+			
+			//Adds this specific messageDialog to a linked list that will then be shown to the people
+			messageDialogs.add(dialog);
+			
+			//int result = dialog.open();
 			
 		}
 	
@@ -236,10 +262,14 @@ public class UmlClassDiagramReader {
 				}
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Association", null, userMessage, MessageDialog.INFORMATION,
-						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+						dialogOptions, 0);
 				// Set the file path and text to be read
 				dialog.setStrings("/org/modelio/soundUML/sounds/04association.wav", userMessage); 
-				int result = dialog.open();
+				
+				//Adds this specific messageDialog to a linked list that will then be shown to the people
+				messageDialogs.add(dialog);
+				
+				//int result = dialog.open();
 				
 			}
 
@@ -253,10 +283,14 @@ public class UmlClassDiagramReader {
 
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Aggregation", null, userMessage, MessageDialog.INFORMATION,
-						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+						dialogOptions, 0);
 				// Set the file path and text to be read
 				dialog.setStrings("/org/modelio/soundUML/sounds/08aggregation.wav", userMessage); 
-				int result = dialog.open();
+				
+				//Adds this specific messageDialog to a linked list that will then be shown to the people
+				messageDialogs.add(dialog);
+				
+				//int result = dialog.open();
 
 				
 			}
@@ -271,10 +305,14 @@ public class UmlClassDiagramReader {
 						associationTo  + ", is composed by " +  multiplicityOpposite + " class " + associationFrom;
 				
 				MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Composition", null, userMessage, MessageDialog.INFORMATION,
-						new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+						dialogOptions, 0);
 				// Set the file path and text to be read
 				dialog.setStrings("/org/modelio/soundUML/sounds/09composition.wav", userMessage); 
-				int result = dialog.open();
+				
+				//Adds this specific messageDialog to a linked list that will then be shown to the people
+				messageDialogs.add(dialog);
+				
+				//int result = dialog.open();
 				
 			}
 			
@@ -303,16 +341,20 @@ public class UmlClassDiagramReader {
 			String childClassUnparsed = ((Generalization) mObj).getSubType().toString();
 			String childClassParsed = parseType(childClassUnparsed);
 			
-			String discriminator = ((Generalization) mObj).getDiscriminator();
+			//String discriminator = ((Generalization) mObj).getDiscriminator();
 			
 			
 			String userMessage = childClassParsed + " is a " + parentClassParsed + ", and extends its functionalities";
 
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Generalization/Inheritance", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					dialogOptions, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/05inheritance.wav", userMessage); 
-			int result = dialog.open();
+			
+			//Adds this specific messageDialog to a linked list that will then be shown to the people
+			messageDialogs.add(dialog);
+			
+			//int result = dialog.open();
 		}
 		
 		
@@ -326,10 +368,14 @@ public class UmlClassDiagramReader {
 			String userMessage = "Class " + realizationFrom + " implements the interface " + interfaceName;
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Realization/Implementation", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					dialogOptions, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/06realization.wav", userMessage); 
-			int result = dialog.open();
+			
+			//Adds this specific messageDialog to a linked list that will then be shown to the people
+			messageDialogs.add(dialog);
+			
+			//int result = dialog.open();
 				
 		}
 		
@@ -354,10 +400,14 @@ public class UmlClassDiagramReader {
 			}
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Dependency", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					dialogOptions, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/07dependency.wav", userMessage); 
-			int result = dialog.open();
+			
+			//Adds this specific messageDialog to a linked list that will then be shown to the people
+			messageDialogs.add(dialog);
+			
+			//int result = dialog.open();
 
 		}
 		
@@ -369,10 +419,14 @@ public class UmlClassDiagramReader {
 			String userMessage = "Package " + packageName;
 			
 			MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Package", null, userMessage, MessageDialog.INFORMATION,
-					new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+					dialogOptions, 0);
 			// Set the file path and text to be read
 			dialog.setStrings("/org/modelio/soundUML/sounds/11package.wav", userMessage); 
-			int result = dialog.open();
+			
+			//Adds this specific messageDialog to a linked list that will then be shown to the people
+			messageDialogs.add(dialog);
+			
+			//int result = dialog.open();
 		}
 
 	
@@ -425,10 +479,14 @@ public class UmlClassDiagramReader {
 
 					
 					MessageDialogExtended dialog = new MessageDialogExtended(null, "Info - Class Association", null, userMessage, MessageDialog.INFORMATION,
-							new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue"}, 0);
+							dialogOptions, 0);
 					// Set the file path and text to be read
 					dialog.setStrings("/org/modelio/soundUML/sounds/10classAssociationA.wav", userMessage); 
-					int result = dialog.open();
+					
+					//Adds this specific messageDialog to a linked list that will then be shown to the people
+					messageDialogs.add(dialog);
+					
+					//int result = dialog.open();
 					
 					//Reads the class directly, this way we ensure that the class and all its attributes, operations and relations
 					// are read right after being shown the class association message
@@ -517,9 +575,41 @@ public class UmlClassDiagramReader {
 
 	}
 	
-	
+	public void showMessageDialogs() {
+		
+		int i = 0;
+		while(i < messageDialogs.size()) {
+			MessageDialogExtended currentMessage = messageDialogs.get(i);
+			if(i == 0) {
+				//currentMessage.isFirstMessage();
+			}
+			int result = currentMessage.open();
+			
+			//End reading
+			if(result == 3) {
+				return;
+			}
+			
+			//Back to the previous
+			if(result == 4) {			
+				i--;
+			}
+				
+			//Continue reading
+			if(result == 5) {
+				i++;
+			}
+			
+		}
+		
+			
+
+	}
+
+
 /*------------------------------------------------------------------------*/	
-/* 
+
+
     //Useful for debugging in eclipse
 	//Show an information dialog box.
 	public static void showInformation(final String title, final String message) {
@@ -535,15 +625,15 @@ public class UmlClassDiagramReader {
 		showInformation("aaaa", "aaaa");
 
 		MessageDialogExtended dialog = new MessageDialogExtended(null, "Info", null, "My message TEST A", MessageDialog.INFORMATION,
-				new String[] { "Play Sound", "Read Message", "Reset Buttons", "Continue" }, 0);
-		dialog.setStrings("/org/modelio/soundUML/sounds/01class.wav", "aaaa"); // Set the file path and text to be read
+				dialogOptions, 0);
+		dialog.setStrings(SOUND_PATH_CLASS, "aaaa"); // Set the file path and text to be read
 		int result = dialog.open();
-		System.out.println("aaaa");
+		//System.out.println(dialog.getReturnCode());
 
 
 		System.out.println(result);
 	}
 
-*/
+
 	
 }
